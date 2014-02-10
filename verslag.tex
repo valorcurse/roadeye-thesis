@@ -1,0 +1,73 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%eventueel dutch in english veranderen, eventueel twoside verwijderen       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\documentclass[11pt,a4paper,twoside,dutch]{report}%
+\usepackage[dutch]{babel}%
+\selectlanguage{dutch}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newif\ifpublic \newif\iftwocol %nodig voor publicatiemode, niet wijzigen!  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%publiceerbare versie (geen titelblad, bedanktuiging, evaluatie en bijlagen)%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%\publictrue        %1-kolom publicatiemode (zonder %) of verslagmode (met %)
+%\twocoltrue        %2-kolommen publicatiemode
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%nodig voor template: packages en macro's                                   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+\ifpublic\iftwocol\twocolumn\fi\fi  %vlag 1 of 2 kolommen                   %
+\usepackage[utf8]{inputenc}         %aanbevolen encoding, kies 1 van de 3
+%\usepackage[utf-8]{inputenc}      %sommige Ubuntu en Window distributies
+%\usepackage[latin1]{inputenc}     %oudere LaTeX-distributies
+\usepackage{modelverslag}           %verplicht voor de template             %
+\renewcommand{\redactie}[1]{\relax} %nodig voor redactionele opmerkingen    %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%hieronder komen alle packages die je zelf wil plaatsen of veranderen       %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage{algorithmic}      %aangepaste algoritmen   
+\usepackage{listings}         %aangepaste listings (event. in kleuren)
+%\usepackage{}
+%\usepackage{}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%% einde van de preambule, begin document %%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+\titelblad                   %argumenten invullen
+  {Een \LaTeX\ `model' voor het afstudeerverslag} %hier titel invullen 
+  {Onbekend Talent (123456)} %hier naam en (stamnummer) van student invullen
+  {\TI}                      %hier opleiding \TI, \INF of \BI invullen
+  {\today}                   %{\today} concept of {1 april 2011} definitief
+  {Dhr. M. de Uil}           %eerste docent
+  {}                         %tweede docent
+% als er meer auteurs zijn, dan wordt de tweede parameter:
+% {Onbekend Talent1 (123456)\\Onbekend Talent2 (987654)\\ ...} 
+\ifpublic
+  {\footnotesize{\input{samenvatting}}}
+\else
+  \pagenumbering{roman}
+  \input{samenvatting}     %(verplicht) samenvatting
+  \include{dankbetuiging}  %(optioneel) dankbetuiging
+  \tableofcontents         %overzicht hoofdstukken en paragrafen
+  \include{afkortingen}    %(optioneel) overzicht afkortingen
+  \pagenumbering{arabic}
+\fi
+\input{inleiding}    %(verplicht) inleiding
+\input{hoofdverslag} %(verplicht) hoofdverslag
+\input{conclusies}   %(verplicht) geaggregeerde conclusies en aanbevelingen
+\ifpublic
+  \iflanguage{dutch}{\def\bibname{\normalsize{Bronnen}}}
+                    {\def\bibname{\normalsize{References}}}
+  {\footnotesize{\input{bronnen}}}   %(verplicht) bronvermeldingen
+\else
+  \iflanguage{dutch}{\def\bibname{Bronnen}}{\def\bibname{References}}
+  \input{bronnen}    %(verplicht) bronvermeldingen
+  \addcontentsline{toc}{chapter}{\bibname}
+  \input{evaluatie}  %(verplicht) reflectie op het leerproces
+  \appendix
+  \include{bijlage1}   %(optioneel) bijlagen
+  \include{bijlage2}   %(optioneel) bijlagen
+  \include{bijlage3}   %(optioneel) bijlagen
+%  \include{}   %(optioneel) bijlagen
+%  \include{}   %(optioneel) bijlagen
+%  \include{}   %(optioneel) bijlagen
+\fi
+\end{document}       %Einde van het document

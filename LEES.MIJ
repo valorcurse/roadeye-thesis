@@ -1,0 +1,37 @@
+`afstudeerverslag-1.5'
+
+ - In deze versie zijn Engelse en Nederlandse verslagen met verbeterde
+   titelbladen mogelijk;
+
+ - In de vorige versie werkten de pdf-bookmarks in de verslag-mode
+   niet goed. Dit probleem is opgelost voor de hoofdstukken en
+   paragrafen in de inleiding, het hoofdverslag en de evaluatie. Als
+   het bestand `verslag.tex' wordt vervangen door de nieuwste
+   versie dan werken ook de pdf-bookmarks naar de bronvermeldingen en
+   de bijlagen correct;
+
+ - De macro PROCENT{0...99} geeft een waarde als percentage van de
+   onveranderlijke paginabreedte (exclusief de marges). Deze macro
+   werkt anders dan de macro Procent{..} die een waarde geeft
+   als percentage van de actuele kolombreedte (die verschillend is in
+   de verslag-mode en in de twocolumn-mode). De 100% waarde komt
+   overeen met de macro \textwidth;
+
+ - De omgevingsmacro \begin{Tabel}..\end{Tabel} geeft een tabel
+   in de twocolumn-mode dezelfde breedte als in de verslag-mode. Zij
+   kan worden aangeroepen met de nieuwe macro PROCENT{..} voor
+   de kolommen in de tabel. In de twocolumn-mode wordt de tabel boven
+   in de pagina over gehele breedte geplaatst. Voorbeeld:
+
+   \begin{Tabel}[afm]{|>\R p{\PROCENT{20}}|>\L p{\PROCENT{65}}|}{label}{onderschrift}
+    ...
+   \end{Tabel}
+
+ - De macro \Figuur{}{}{}{} geeft een afbeelding in de twocolumn-mode
+   dezelfde breedte als in de verslag-mode. Zij kan worden aangeroepen
+   met de macro PROCENT{..} voor de breedte. In de twocolumn-mode
+   wordt de afbeelding boven in de pagina over de gehele breedte
+   geplaatst. Voorbeeld:
+
+   \Figuur{width=\PROCENT{99}}{plaatjes/agp.pdf}{label}{onderschrift}
+

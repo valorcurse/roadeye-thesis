@@ -1,0 +1,422 @@
+\hoofdstuk{Hoofdverslag}
+
+In het hoofdverslag moet een rode draad aanwezig zijn,
+zodanig dat het een leesbaar artikel wordt. Deze leesbaarheid houdt in
+dat het publiceerbaar moet zijn in een vakblad. Dit betekent dat voor
+de onderbouwing noodzakelijke gegevens (tabellen, grafieken en
+tekeningen) die de leesbaarheid kunnen verlagen, worden opgenomen in
+bijlagen. Bijlagen worden niet gepubliceerd.
+
+
+Plaatjes worden geplaatst als de tekst te ingewikkeld wordt.
+Plaatjes moeten wel passen in de rode draad. Ook worden aan plaatjes
+`leesbaarheidseisen' gesteld. Haal van te voren overbodige
+informatie uit de plaatjes. Afstudeerverslagen met een grote
+hoeveelheid `witruimte', `screendumps' en `clipart' zijn verdacht,
+meestal duidt dit op een gebrek aan inhoudelijke informatie.
+
+
+De redactie van het hoofdverslag betreft niet alleen het opmaken van
+de teksten, het verwijderen van spelfouten, het controleren van
+verwijzingen en het nummeren van de pagina's, maar ook het zoveel
+mogelijk verwijderen van opsommingen (bullets). Hoewel opsommingen bij
+het opstellen van een teksten in eerste instantie als handige
+kapstokken fungeren, moeten zij uiteindelijk als gewone alinea's
+of paragrafen herschreven worden.
+
+
+Het verschil tussen eigen teksten en teksten van anderen moet
+duidelijk worden aangegeven. Bronvermelding is verplicht, het weglaten
+daarvan kan duiden op plagiaat. Een goed hoofdverslag bevat meestal
+verwijzingen naar relevante en recente vakliteratuur en publicaties
+van gerenommeerde onderzoeks- en onderwijsinstellingen.  Een
+afstudeerverslag van een bacheloropleiding moet verplicht verwijzen
+naar recente en relevante vakliteratuur. Indien een afstudeerverslag
+hieraan niet voldoet, wordt het afgekeurd.
+
+
+Het hoofdverslag is een verhaal. De inhoudelijke beoordeling van dit
+verhaal is bij ingenieursopleidingen gebaseerd op de verantwoording
+van de `keuzes' die gemaakt zijn. De argumentatie van deze gemaakte
+keuzes is direct gebaseerd op de vastgestelde functionele eisen (het
+pakket van eisen), de randvoorwaarden betreffende de kwaliteit en
+risico's en indirect gebaseerd op de context.
+
+
+Niet alleen goede maar ook de verkeerde keuzes die gemaakt zijn, zijn
+belangrijk voor de beoordeling. Vaak blijken verkeerde keuzes tot
+interessante conclusies te leiden. Ook zijn ze noodzakelijk om een
+indruk te krijgen van de inspanning die de student heeft
+geleverd. Naast de keuzes tijdens het ontwerp zijn keuzes voor
+hulpmiddelen en gereedschappen relevant voor de beoordeling.  Als de
+student bijvoorbeeld zelf een ontwerpmethode gekozen heeft, dan zal
+die keuze verantwoord moeten worden. Als de methode voorgeschreven is
+in de randvoorwaarden van de projectopdracht, dan zal aangetoond
+moeten worden dat de methode op correcte manier is toegepast.
+
+
+Om een goed verhaal op te stellen, moet vooraf aan enkele voorwaarden
+worden voldaan. De eerste voorwaarde is de geschiktheid van het
+afstudeerproject. Als een afstudeerproject niet tot keuzes leidt, kan
+men zich afvragen of dat wel een echte afstudeeropdracht is. Een
+afstudeerproject zonder onderzoeksaspecten is ook verdacht. Daarnaast
+moet een afstudeerproject passen in het profiel van een opleiding om
+beoordeelbaar te zijn. De andere voorwaarde voor goed een verhaal is
+de registratie van werkzaamheden tijdens het afstudeerproject. Dit
+voorkomt dat men dingen vergeet.
+
+
+Laat je verslag lezen door een niet bij het afstudeerproject betrokken
+persoon. Meestal ziet die al snel waarin je verslag tekort schiet.
+
+
+\paragraaf{Werken met \LaTeX{}}
+
+Het is niet verplicht om met \LaTeX{} te werken. Men mag ook gebruik
+maken van andere tekstverwerkers zoals \emph{MS-Word}, Wel is het
+verplicht het afstudeerverslag \LaTeX{}-geformateerd in te leveren en
+van de \LaTeX{}-template \verb!modelverslag.sty! gebruik te
+maken.
+
+De \LaTeX{}-template bevat enkele macro's voor het opstellen van een
+hoofdstuk (\verb!\hoofdstuk!), een paragraaf (\verb!\paragraaf!), een
+afbeelding (\verb!\figuur!). De overige \LaTeX{} macro's en omgevingen
+blijven bruikbaar. Bijvoorbeeld de \verb!tabular!-omgeving om tabellen
+te maken:
+
+\begin{lstlisting}{language=[LaTeX]TeX}
+\begin{tabular}{formaat}
+   ... 
+\end{tabular}
+\end{lstlisting}
+
+\begin{center}
+\begin{tabular}{|l||r|}
+  \hline
+  \multicolumn{2}{|c|}{Afmetingen ($1\mbox{ pt}=0,351\mbox{ mm}$)}\\
+  \hline
+  paper width     & \the\paperwidth\\
+  text width      & \the\textwidth\\
+  column width    & \the\columnwidth\\
+  column seperate & \the\columnsep\\
+  oddside margin  & \the\oddsidemargin\\
+  evenside margin & \the\evensidemargin\\
+  paper height    & \the\paperheight\\
+  text height     & \the\textheight\\
+  top margin      & \the\topmargin\\
+  \hline
+\end{tabular}
+\end{center}
+
+Een nadeel van tabellen dat ze vaak te groot zijn voor de
+twocolumn-mode. Het zou mooi zijn als ze ingedrukt kunnen
+worden. Bovendien is deze tabel niet-zwevend, hij wordt geplaatst
+tussen de tekstdelen waar hij is ingevoerd. Dit kan bezwaarlijk zijn
+bij pagina-overgangen. In dat geval kan je beter gebruikmaken van
+zwevende tabellen (en figuren) die door \LaTeX{} zelf op een geschikte
+plaats worden gezet. Wel moet aan een zwevende tabel een label en een
+onderschrift gekoppeld worden om er naar te kunnen verwijzen. Voor een
+zwevende horizontale tabel met label en onderschrift wordt in de
+`template' de \verb!tabel!-omgeving aangeboden:\\
+
+\begin{Aanpassen}
+\begin{verbatim}
+\begin{tabel}[afm]{formaat}{label}{onderschrift}
+  ...
+\end{tabel}
+\end{verbatim}
+\end{Aanpassen}
+
+
+De \verb!tabel!-omgeving plaatst `zwevende' tabellen in verslag- en
+publicatie-mode. Het eerste argument is een optioneel \verb![afm]!
+argument met de defaultwaarde \verb!\normalsize! voor de afmeting van
+de karakters. De mogelijke waarden voor de afmeting zijn -- van groot
+tot klein -- de volgende macro's: (\verb!\huge!, \verb!\LARGE!,
+\verb!\Large!, \verb!\large!, \verb!\small!, \verb!\footnotesize!,
+\verb!\scriptsize! en \verb!\tiny!).
+
+Bovendien zijn de standaard \verb!tabular! kolomformaten
+\verb!r,l,c,|,||,p{lengte}! uit de tabelomgeving uitgebreid met
+kolomformaten \verb!\R, \C, \L!  voor variabele celinhoud zoals het
+plaatsen van meerdere regels per cel.
+
+Een verticale tabel is mogelijk met de omgeving (\verb!TABEL!)  met
+dezelfde kolomformaten mogelijkheden.  In \LaTeX{} zijn de tabellen,
+vooral in de \verb!twocolumn!-mode erg lastig. Bijvoorbeeld in de
+tabellen~\ref{tab:vbt} en \ref{tab:vbx} zijn twee verschillende
+uitwerkingen van de tabelomgevingen:
+
+\begin{footnotesize}
+\begin{tabel}[\Large]{|r|l|}{vbt}{Vaste cellen, variabele breedte}
+  \hline
+  7C0 & hexadecimal \\
+  3700 & octal \\ \cline{2-2}
+  11111000000 & binary \\
+  \hline \hline
+  1984 & decimal \\
+  \hline
+\end{tabel}
+\end{footnotesize}
+
+%Absolute breedte in mm, cm etc. (geschikt voor één mode):
+%\begin{tabel}{|>\R p{2cm}|>\L p{4cm}|}{vbx}{OpenGL libraries}
+%Relatieve breedte 20% en 65% van de kolombreedte (geschikt voor alle moden).
+%Procentwaarden van 0 ... 99, voor 100% neem \columnwidth zelf.
+\begin{tabel}{|>\R p{\Procent{20}}|>\L
+    p{\Procent{65}}|}{vbx}{Variabele cellen, variabele breedte}
+\hline
+ OpenGL core library & OpenGL32 voor MS-Windows en GL voor
+ de meeste X-Window systemen\\
+\hline
+ OpenGL Utility Library & GLU\\
+\hline
+ Koppeling met het platform & GLX voor X-Window en WGL voor MS-Windows\\
+\hline 
+ OpenGL Library Utility Toolkit & GLUT, bibliotheek voor
+  het openen van windows, invoer van muis en toetsenbord, menus,
+  event-driven in- en uitvoer\\
+\hline
+\end{tabel}
+
+Plaats afbeeldingen alleen in het hoofdverslag als ze de tekst
+ondersteunen en de leesbaarheid niet verlagen.  In de tekst kan naar
+afbeeldingen worden verwezen met de macro \verb!\ref{fig:label}!.
+
+In \LaTeX{}\cite{lam1994} geschreven verslagen zijn op diverse manieren
+afbeeldingen\cite{Oos1996} te plaatsen. Een van die manieren is gebruik te
+maken van de macro \verb!\figuur! in de \verb!modelverslag!-package'.
+
+`Vector graphics' figuren van het `pdf-', `eps-' en `svg-'
+formaat\footnote{Een pdf-bestand kan zowel vector-graphics als
+  bitmap-graphics bevatten.} met een ingewikkelde `bounding box' zijn
+moeilijk op de juiste schaal te brengen. Vaak moet dat met uitproberen
+bepaald worden. Het plaatsen van figuren met absolute afmetingen of
+een vaste `scale' factor, kan leiden tot minder soepele oplossingen
+zoals figuur~\ref{fig:PDFA}. Deze figuur heeft naast een rotatie
+(\verb!angle=270!)  een vaste scale-factor (\verb!scale=0.45!) die
+alleen geschikt is voor de `twocolumn-mode'.
+
+\begin{center}
+  \figuur{scale=0.45,angle=270}{plaatjes/agp.pdf}{PDFA}{Vaste breedte
+    (pdf)}
+\end{center}
+
+In plaats van \verb!scale=x! kan je beter de relatieve afmeting
+\verb!width=\Procent{y}! gebruiken. De waarde $y$ wordt in de
+verslag-mode met uitproberen gevonden, zie figuur~\ref{fig:PDFR}.
+
+\figuur{width=\Procent{40},angle=270}{plaatjes/agp.pdf}{PDFR}{Variabele
+  breedte (pdf)}
+
+Het afmetingsprobleem is iets gemakkelijker op te lossen met `bitmap
+graphics' van het `jpg-', `gif-' en `png-' formaat omdat de figuren al
+van te voren geschaald kunnen worden als de `bounding box' bij het
+inlezen bekend is. De breedte (\verb!width!) kan als percentage van de
+kolombreedte (\verb!width=\Procent{0 ... 99}!) worden opgegeven zoals
+dat bij figuur~\ref{fig:PNGR} gedaan is. Voor een 100\% waarde neemt
+men \verb!width=\columnwidth! De afmeting wordt automatisch
+aangepast aan de nieuwe kolombreedte.
+
+
+\begin{center}
+\figuur{width=\columnwidth}{plaatjes/agp.png}{PNGR}{Variabele breedte (png)}
+\end{center}
+
+
+De macro \verb!\PROCENT{0...99}! is nodig voor de macro's \verb!Tabel!
+en \verb!Figuur!. Deze laatste twee macro's maken het mogelijk dat
+tabellen en afbeeldingen in de twocolumn-mode passen met behoud van
+hun originele afmeting en detaillering (zie
+figuur \ref{fig:FIXED}). De parameters van deze macro's komen overeen
+met de parameters van de macro's \verb!tabel! en \verb!figuur!.
+
+\Figuur{width=\PROCENT{40},angle=270}{plaatjes/agp.pdf}{FIXED}{Vaste breedte ook in twocolumn-mode (pdf)}
+
+In het algemeen heeft vector-graphics een betere kwaliteit van de
+weergave dan bitmap-graphics.
+
+
+\paragraaf{Bijzondere tekens en afbreekproblemen}
+
+Bijzondere tekens zoals de á, à, ä, é, è, ë, ï, ü, ç \ldots worden
+probleemloos door \LaTeX{} geaccepteerd als normale utf8
+karakters. Voor de uitzonderingen bestaan macro's zoals het
+euro-symbool \euro{} waarvoor de macro \verb!\euro! nodig is. In
+wiskundige formules kan je gebruik maken van de macro \verb!\eurom!.
+
+
+In de two-columnmode zijn regels soms te lang als er gebruik gemaakt
+is van \verb!verb! of \verb!verbatim! of woorden die niet goed worden
+afgebroken. In dat laatste geval kan je in zo'n woord een afbreekpunt
+introduceren met de twee tekens \verb!\-!. Een regel kan gecontroleerd
+afgebroken door van te voren onzichtbare knikpunten te plaatsen met de
+\verb!\Knak! macro. De volgende regel moet in in tegenstelling met de
+twocolumnmode in de verslagmode ongeknakt worden weergegeven:
+
+\begin{Aanpassen}
+\begin{verbatim}
+ ... aaaaaaa\Knak{}aaaaaaa ...
+\end{verbatim}
+\end{Aanpassen}
+
+
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\Knak{}aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+
+Voor regels waarbij de structuur niet gebroken mag worden, is de
+\verb!\Knak!-methode ongeschikt, bijvoorbeeld bij scripts en
+broncode. Daarentegen zorgt de \verb!Aanpassen!-omgeving ervoor dat in
+de twocolumn-mode de regels met behoud van de originele structuur
+worden weergegeven. Daarvoor wordt een kleinere letterafmeting
+gebruikt (default de \verb!\scriptsize!). Deze omgeving werkt alleen
+met niet al te lange regels. Bij zeer lange regels moet de
+letterafmeting zeer klein worden waardoor de leesbaarheid in het
+gedrang komt. In dat geval moet naar een andere oplossing gezocht
+worden zoals het opnemen van de probleemregels (broncode en scripts)
+in de bijlagen.
+
+\begin{Aanpassen}[\tiny]
+aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.
+\end{Aanpassen}
+
+Hoewel het gebruik van opsommingen (\verb!\item!), letterlijke citaten
+\verb!quotation! en kaders (\verb!\fbox!) in de twocolumn-mode tot
+problemen kunnen leiden, zijn ze beperkt toegestaan. Bijvoorbeeld voor
+de kaders rond de teksten kan je beter gebruik maken van de
+\verb!tabular!-omgeving (of de \verb!tabel!-omgeving als je geen last
+wil hebben van pagina-overgangen), dan voor de standaard
+\verb!\fbox!-methode. De kolom van deze omkaderde tabel moeten dan wel
+een relatieve afmetingsverhouding de \verb!\columnwidth! krijgen.
+
+\begin{Aanpassen}
+\begin{verbatim}
+\begin{center}
+\begin{tabular}{|>\C p{\Procent{80}}|}
+  \hline
+  Afbreekproblemen ...
+  \hline
+\end{tabular}
+\end{center}
+\end{verbatim}
+\end{Aanpassen}
+
+\begin{center}
+\begin{tabular}{|>\C p{\Procent{80}}|}
+  \hline
+  ~\\
+  Afbreek- en andere opmaakproblemen pak je als laatste aan,
+  dus bij je definitieve verslag!\\
+  ~\\
+  Tabellen, figuren en listingen in het hoofdverslag tot het
+  noodzakelijke beperken.\\
+  ~\\
+  \hline
+\end{tabular}
+\end{center}
+
+
+\paragraaf{Algoritmen en broncode\cite{wikibooks}}
+
+Als je algoritmen met een mooie layout wilt hebben, dan zou je het
+\verb!algorithmic!-pakket kunnen gebruiken. Met dit pakket kan je het
+algoritme op een logische manier opbouwen met pseudotaal. Het bestand
+`verslag.tex' bevat al de pakketten \verb!algorithmic! en
+\verb!listings! die voor dit verslag nodig zijn. Als je zelf packages
+wil toevoegen of verwijderen (afblijven van
+\verb!\usepackage{moduleverslag}!)  dan moet dat in de preambule
+`verslag.tex'.
+
+\begin{Aanpassen}
+\begin{verbatim}
+\usepackage{algorithmic}
+\end{verbatim}
+\end{Aanpassen}
+
+Een algoritme moet je maken binnen een algorithmic-omgeving, een
+voorbeeld:
+
+\begin{Aanpassen}[\small]
+\begin{algorithmic}
+\IF {$i\geq maxval$} 
+        \STATE $i\gets 0$
+\ELSE
+        \IF {$i+k\leq maxval$}
+                \STATE $i\gets i+k$
+        \ENDIF
+\ENDIF 
+\end{algorithmic}
+\end{Aanpassen}
+
+
+Broncode kan je in een \verb!verbatim!-omgeving opnemen. De
+broncoderegels zien er net zo uit zoals je ze ingetypt hebt.  Het
+\verb!listings!-pakket is geavanceerder dan de
+\verb!verbatim!-omgeving.
+
+\begin{Aanpassen}
+\begin{verbatim}
+\usepackage{listings}
+\end{verbatim}
+\end{Aanpassen}
+
+Merk even op dat alle commando's van het \verb!listings!-pakket
+beginnen met \verb!lst!, dit conform de lppl-licentie.
+
+De broncode zelf zet je in een \verb!listings!-omgeving, net zoals bij
+de \verb!verbatim!-omgeving, om broncode te zetten gebruik je het
+\verb!\lstinline!-commando op dezelfde manier als het
+\verb!\verb!-commando. Je kunt ook broncode van een extern document laden met het commando:
+
+\begin{Aanpassen}
+\begin{verbatim}
+\lstinputlisting{pathname}
+\end{verbatim}
+\end{Aanpassen}
+
+Het argument `pathname' is de relatieve of absolute locatie van het
+bronbestand, de map(pen) gecombineerd met de bestandsnaam. Als je
+broncode van een bronbestand laadt, ben je zeker dat de broncode in je
+\LaTeX{}-document altijd actueel is en hou je het \LaTeX{}-document
+overzichtelijk. Als de broncode niet in dezelfde map of een submap van
+het \LaTeX{}-document staat of je gebruikt absolute `pathnames', dan
+is het mogelijk dat het verslag niet op andere computers gecompileerd
+kan worden. Bij het inleveren van je afstudeerverslag in
+\LaTeX{}-formaat zal je hiermee rekening moeten houden.
+
+
+Alle opties in het \verb!listings!-pakket hebben eenzelfde structuur
+\verb!sleutel=waarde!. Als je alleen 'Java' gebruikt hebt, dan kan je
+deze taal voor je volledig document na de regel
+\verb!\usepackage{listings}! in preambule `verslag.tex' definiëren met
+\verb!\lstset{language=java}!
+
+\lstset{language=java}
+
+\begin{Aanpassen}
+\begin{lstlisting}
+public class HelloWorld {
+    public static void main(String[] args) {
+        System.out.println("Hello, world!");
+    }
+}
+\end{lstlisting}
+\end{Aanpassen}
+
+
+De sleutel is hier dus \verb!language! en de waarde die je aan de
+sleutel geeft is \verb!java!. Alles wat je als opties binnen de
+\verb!\lstset!-macro zet kan je per \verb!listings!-omgeving apart
+definiëren. Bijvoorbeeld html-broncode met
+\verb!\begin{lstlisting}[language=html]!:
+
+\begin{Aanpassen}
+\begin{lstlisting}[language=html]
+<html>
+    <head>
+        <title>Hello</title>
+    </head>
+    <body>Hello</body>
+</html>
+\end{lstlisting}
+\end{Aanpassen}
+
