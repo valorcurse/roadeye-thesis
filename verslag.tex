@@ -1,9 +1,9 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %eventueel dutch in english veranderen, eventueel twoside verwijderen       %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\documentclass[11pt,a4paper,twoside,dutch]{report}%
-\usepackage[dutch]{babel}%
-\selectlanguage{dutch}%
+\documentclass[11pt,a4paper,twoside]{report}%
+\usepackage[english]{babel}%
+\selectlanguage{english} %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\ifpublic \newif\iftwocol %nodig voor publicatiemode, niet wijzigen!  %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -32,12 +32,12 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
 \titelblad                   %argumenten invullen
-  {Een \LaTeX\ `model' voor het afstudeerverslag} %hier titel invullen 
-  {Onbekend Talent (123456)} %hier naam en (stamnummer) van student invullen
+  {RoadEye} %hier titel invullen 
+  {Marcelo Dias Avelino (0840416)} %hier naam en (stamnummer) van student invullen
   {\TI}                      %hier opleiding \TI, \INF of \BI invullen
   {\today}                   %{\today} concept of {1 april 2011} definitief
-  {Dhr. M. de Uil}           %eerste docent
-  {}                         %tweede docent
+  {Mrs. T. Ubert}           %eerste docent
+  {Mr. A. van Raamt}                         %tweede docent
 % als er meer auteurs zijn, dan wordt de tweede parameter:
 % {Onbekend Talent1 (123456)\\Onbekend Talent2 (987654)\\ ...} 
 \ifpublic
