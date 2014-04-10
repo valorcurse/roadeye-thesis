@@ -1,15 +1,8 @@
+\hoofdstuk {Methodology}
+
+<insert text here>
+
 \hoofdstuk{Thesis}
-
-\paragraaf{Problem Analysis}
-
-Even nowadays, it is still difficult for law enforcement to follow up on every case of stolen property, e.g. cars, simply because they cannot be everywhere at once. A possible way to improve law enforcement's efficiency would be by including the aid of civillians through the voluntary provision of gathered information from one's environment. This used to be a very difficult issue because required people to carry dedicated, and often large, hardware devices which made the gathering of information possible. Since the breaking of the smartphone age, a large number of people carry a computer in their pockets. This internet-connected all-purpose device allows for a whole range of new possibilities and with the right software, gives the user the possibility to help his own community and therefore help making it a better place. 
-
-The objective of this project consists in creating an Android smartphone software application that recognises license plates and is able to read the alphanumeric text displayed on them. The recognition algorithms will be applied to images captured using the device's camera. The application will retrieve a list with license plate information from a website and using this list, it will try to match them to the recognised license plates. In case of a matched license plate, the application will then report the license plate information, the date and time, the current location and the degree of reliability of the recognition to a central application.
-This project will try to answer the following question: \textit{How can license plate information be gathered from images of a video camera using software?}
-
-But this only concerns the problem of this project in a more general way, without taking any requirements or conditions into account. Because the software must run on a mobile platform it must take all the limitations of such a platform or the environment where it will operate into consideration, i.e. limited processing power, battery life, unstable images or car distance. To keep these conditions in mind while developing the application, the following questions will be answered: \textit{`How can the software be optimised to work in a correct way from within a mobile device?'} and \textit{`What are the limitations of such an application?'}.
-
-\newpage
 
 \paragraaf{Algorithms}
 
@@ -17,7 +10,7 @@ When searching for possible algorithms with the functionality to find license pl
 
 The feature detection algorithms work by finding so called \emph{features} in a image, which are used to recognize the first image in a second one. These features are segments of an image which must be uncommon, as to reduce the possibility of retrieving a false positive when applying the algorithm, and also consist of something which can be objectively described to a computer. Because of these requirements, the features extracted from an images are usually corners since a corner only matches itself if compared to other segments of the image, as opposed to flat surfaces or lines which may appear in multiple times in multiple places. Because this algorithm focuses on detecting the uniqueness of an image and using that attribute to detect it in different images, it becomes difficult to use feature detection to recognize license plates because every license plate contains unique text. These false positives originate from the diversity in shapes that exist in the latin alphabet and this considerable collection features is often detected in random and incorrect locations. One possible approach to use this algorithm to find the plate location would be by creating a feature database of every possible alphanumeric character and then finding the highest concentration of text as a possible location. Due to little information on the performance of this algorithm, the other algorithm was chosen.
 
-The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection algorithm to a greyscale version of the image where the car is present, e.g. the Sobel Filter [ref here] or Canny Edge Filter [ref here]. This creates a black and white image where the edges of every object in the images are displayed in white. One of the characteristics of a license plate is the presence of a high amount of edges due to the text displayed on it. This means that by using this algorithm it is possible to find the location of the license plate by looking for the highest edge density area in the image. This method of plate location has been chosen because of the large amount of information that proves its effiency and performance.
+The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection algorithm to a greyscale version of the image where the car is present, e.g. the Sobel Filter [ref here] or Canny Edge Filter [ref here]. This creates a black and white image where the edges of every object in the images are displayed in white. One of the characteristics of a license plate is the presence of a high amount of edges due to the text displayed on it. This means that by using this algorithm it is possible to find the location of the license plate by looking for the highest edge density area in the image. This method of plate location has been chosen because of the large amount of information that proves its efficiency and performance.
 
 \paragraaf{Architecture}
 
