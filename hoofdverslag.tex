@@ -7,8 +7,7 @@ This method is applied for searching for potential algorithms which can be used 
 
 \paragraaf{Development method}
 
-his project will be developed using the \emph{Iterative Application Development} (IAD) method. This development metho
-d works by dividing the project into smaller `sub-projects', called \emph{cycles}, and incrementing them to past cycles, which will ultimately lead to a complete system. Each cycle consists of three phases, which can be repeated multiple times if necessary, called \emph{iterations}. These iterations are: \emph{definition}, \emph{development} and \emph{deployment}.
+This project will be developed using the \emph{Iterative Application Development} (IAD) method. This development method works by dividing the project into smaller `sub-projects', called \emph{cycles}, and incrementing them to past cycles, which will ultimately lead to a complete system. Each cycle consists of three phases, which can be repeated multiple times if necessary, called \emph{iterations}. These iterations are: \emph{definition}, \emph{development} and \emph{deployment}.
 
 During the definition phase the goals, limitations and conditions for the current cycle are examined and described. If a previous cycle has been completed, it will be evaluated during this phase. This phase is intended for thinking towards the completion of the project and to achieve a more clear picture of the system as a whole.
 After defining the objective for the new cycle, the software will be developed. After finishing, the software is then integrated with the software developed in the previous cycles and becomes therefore part of the general project.
@@ -17,31 +16,24 @@ This method of software development brings multiple benefits: The complexity of 
 
 Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
 
-\hoofdstuk{Thesis}
+\hoofdstuk{Algorithms}
 
-\paragraaf{Algorithms}
+\paragraaf{Plate localization}
 
 When searching for possible algorithms with the functionality to find license plates in an image, two main types came forth from the research: feature detection and edge detection. 
 
-The feature detection algorithms work by finding so called \emph{features} in a image, which are used to recognize the first image in a second one. These features are segments of an image which must be uncommon, as to reduce the possibility of retrieving a false positive when applying the algorithm, and also consist of something which can be objectively described to a computer. Because of these requirements, the features extracted from an images are usually corners since a corner only matches itself if compared to other segments of the image, as opposed to flat surfaces or lines which may appear in multiple times in multiple places. Because this algorithm focuses on detecting the uniqueness of an image and using that attribute to detect it in different images, it becomes difficult to use feature detection to recognize license plates because every license plate contains unique text. These false positives originate from the diversity in shapes that exist in the Latin alphabet and this considerable collection features is often detected in random and incorrect locations. One possible approach to use this algorithm to find the plate location would be by creating a feature database of every possible alphanumeric character and then finding the highest concentration of text as a possible location. Due to little information on the performance of this algorithm, the other algorithm was chosen.
+The feature detection algorithms works by finding so called \emph{features} in a image, which are used to recognize the first image within a second one. These features are segments of an image which must be uncommon, as to reduce the possibility of retrieving a false positive when applying the algorithm, and also consist of something which can be objectively described to a computer. Because of these requirements, the features extracted from an images are usually corners since corners usually only match themselves when compared to other segments in an image. This opposed to flat surfaces or lines, which may appear multiple times in multiple places in the same image. Because this algorithm focuses on detecting the uniqueness of an image and using those attributes to detect themselves in different images, it is difficult to use feature detection for the recognition of license plates for the reason that every license plate contains unique text. The considerable collection of diverse shapes that exist in the Latin alphabet create false positives which are often detected in random and incorrect locations. One possible approach to use this algorithm would be by creating a feature database of every possible alphanumeric character and then finding the highest concentration of text as a possible location. 
 
-The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection algorithm to a grey scale version of the image where the car is present, e.g. the Sobel Filter [ref here] or Canny Edge Filter [ref here]. This creates a black and white image where the edges of every object in the images are displayed in white. One of the characteristics of a license plate is the presence of a high amount of edges due to the text displayed on it. This means that by using this algorithm it is possible to find the location of the license plate by looking for the highest edge density area in the image. This method of plate location has been chosen because of the large amount of information that proves its efficiency and performance.
+The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection filter to a grey scale version of the image where the car is present, e.g. the Sobel Filter [ref here] or Canny Edge Filter [ref here]. This creates a binary image where the edges of every shape present in the image are displayed. Because of the nature of one of the characteristics common to every license plate, which is the presence of text, an area with a high density of edges is created. Although license plates are not the only objects which might have such a property, e.g. a fence, it is the most common one which might be encountered while driving. By applying this filter to find horizontal edges it is possible to find the vertical location of the plate, called a \emph{band}, and then vice-versa to find the horizontal location and by extension the plate itself. Due to little information on the performance of the first algorithm and an healthy amount of information regarding this one, this algorithm was chosen.
 
-\paragraaf{Architecture}
+\paragraaf{Text recognition}
 
+`Explanation on training Tesseract'
 
+\hoofdstuk{Application}
 
+\paragraaf{Design}
 
-
-
-
+\figuur{width=\textwidth}{plaatjes/architecture-RoadEye-parallel.png}{fig:architecture}{System flow diagram}
 
 \paragraaf{Implementation}
-
-% for detecting vertical edges, it is possible generate a graph on the amount of edges in a specific row by summing all the values on that same row together. One of the characteristics of a license plate is the presence of a high amount of edges due to the text displayed on it. This makes it possible to find the vertical location of the plate by looking for the highest peak on the edges graph and using the left and right base of that peak as the delimiter for the location of the license plate. Because there might be an object in the image with a higher edge density than the plate, a pre-defined number of candidates are detected by the algorithm (default is 3) for increasing the chance of finding the correct location. The results in a number of horizontal segments of the original images, called bands. 
-
-% therefore the features detected in the image create a lot of false positives.   
-
-% \newpage
-
-% \paragraaf{Implementation}
