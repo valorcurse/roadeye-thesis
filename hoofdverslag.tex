@@ -20,7 +20,7 @@ Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past
 
 \paragraaf{Plate localization}
 
-When searching for possible algorithms with the functionality to find license plates in an image, two main types came forth from the research: feature detection and edge detection. 
+When searching for possible algorithms which make it possible to find license plates in an image, two main types came forth from the research: feature detection and edge detection. 
 
 The feature detection algorithms works by finding so called \emph{features} in a image, which are used to recognize the first image within a second one. These features are segments of an image which must be uncommon, as to reduce the possibility of retrieving a false positive when applying the algorithm, and also consist of something which can be objectively described to a computer. Because of these requirements, the features extracted from an images are usually corners since corners usually only match themselves when compared to other segments in an image. This opposed to flat surfaces or lines, which may appear multiple times in multiple places in the same image. Because this algorithm focuses on detecting the uniqueness of an image and using those attributes to detect themselves in different images, it is difficult to use feature detection for the recognition of license plates for the reason that every license plate contains unique text. The considerable collection of diverse shapes that exist in the Latin alphabet create false positives which are often detected in random and incorrect locations. One possible approach to use this algorithm would be by creating a feature database of every possible alphanumeric character and then finding the highest concentration of text as a possible location. 
 
@@ -30,10 +30,10 @@ The other possible algorithm is mostly based on edge detection. This kind of alg
 
 `Explanation on training Tesseract'
 
-\hoofdstuk{Application}
+\hoofdstuk{Design}
 
-\paragraaf{Design}
+Because the application implemented in is an Android application, its design was created with Android's design rules in mind. A flowchart which illustrates the general design and flow of the application is displayed in Figure \ref{fig:architecture}. Within an Android application all components run in the same thread by default, which is also known as the `main thread', and is identified in the flowchart as `UI' because it is used mainly to regulate all the processes related to the user interface. One of those processes, and also the most fundamental, is the process which captures images from the device's camera. The process captures image frames at a set rate in order to avoid the unnecessary capture of very similar images and because image processing algorithms consist of a large number of calculations and therefore might take a long time to finish, to avoid overwhelming the application with too many frames. These images are then pushed into a queue, called `Frames buffer', where they are kept until they are able to be processed. For the same reasons the camera only captures frames at a specific rate, this queue has a limit of how many frames can be stored within but with an intention of only preserving images which are as recent as possible, before a new frame is added the oldest remaining frame in the queue is removed. This process is repeated from the start of the application until its termination.
 
-\figuur{width=\textwidth}{plaatjes/architecture-RoadEye-parallel.png}{fig:architecture}{System flow diagram}
+\figuur{width=\textwidth}{plaatjes/architecture-RoadEye-parallel.png}{architecture}{System flow diagram}
 
-\paragraaf{Implementation}
+\hoofdstuk{Implementation}
