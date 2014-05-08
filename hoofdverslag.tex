@@ -44,7 +44,7 @@ As explained before, image processing is rather heavy and it is necessary to use
 
 \hoofdstuk{Implementation}
 
-The application consists of three important components: the algorithm for finding the vertical location of the license plates, the plate localization algorithm and the text recognition component. Both localization algorithms are based on the of `Java ANPR add ref here', with some slight deviation on the methods used.
+The application consists of three important components: the algorithm for finding the vertical location of the license plates, the plate localization algorithm and the text recognition component. Both localization algorithms are based on the of \textbf{`Java ANPR add ref here'}, with some slight deviation on the methods used. The car in Figure \ref{fig:car-source} is used to demonstrate how the algorithm works.
 
 \paragraaf{Bands}
 
@@ -58,28 +58,32 @@ Colour segmentation consists of grabbing only the areas of an image which fall w
 \figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
 
 
+As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created and it is quite visible where the plate is located. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to increase the chance of finding plates instead of some random object. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, which in this case is the Sobel algorithm \textbf{`add ref here'}, we still get a visible area where the plate is located but in case the source image had large yellow area, these areas as now mostly gone.
+
 \begin{figure}[h]
         \centering
         \begin{subfigure}{0.37\textwidth}
-                \includegraphics[width=\textwidth]{plaatjes/car}
-                \caption{Source car image.}
+            \includegraphics[width=\textwidth]{plaatjes/car}
+            \caption{Source car image.}
+            \label{fig:car-source}
         \end{subfigure}%
        	~ 
         \begin{subfigure}{0.3\textwidth}
-                \includegraphics[width=\textwidth]{plaatjes/yellow-segment}
-                \caption{Yellow segmentation of source image.}
+            \includegraphics[width=\textwidth]{plaatjes/yellow-segment}
+            \caption{Yellow segmentation of source image.}
+            \label{fig:color-segmented}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.33\textwidth}
-                \includegraphics[width=\textwidth]{plaatjes/edge-detection}
-                \caption{Edge detection.}
+            \includegraphics[width=\textwidth]{plaatjes/edge-detection}
+            \caption{Edge detection.}
         \end{subfigure}%
 
         \begin{subfigure}{0.5\textwidth}
-                \includegraphics[width=\textwidth]{plaatjes/3-peaks}
-                \caption{Three possible bands.}
+            \includegraphics[width=\textwidth]{plaatjes/3-peaks}
+            \caption{Three possible bands.}
         \end{subfigure}%
 
         \caption{Phases from band localization.}
-        \label{fig:structCompare}
+        \label{fig:find-band}
 \end{figure}
