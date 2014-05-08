@@ -44,13 +44,19 @@ As explained before, image processing is rather heavy and it is necessary to use
 
 \hoofdstuk{Implementation}
 
-The application consists of three important components: the algorithm for finding the vertical location of the license plates, the plate localization algorithm and the text recognition component.  
+The application consists of three important components: the algorithm for finding the vertical location of the license plates, the plate localization algorithm and the text recognition component. Both localization algorithms are based on the of `Java ANPR add ref here', with some slight deviation on the methods used.
 
 \paragraaf{Bands}
 
-The first step to finding a license plate is to find its vertical localization, which also known as a band. But before being able to apply this algorithm, some pre-processing is necessary on the captured image. 
+The first step to finding a license plate is to find its vertical location, which also known as a band. By making use of one of the most characteristic features of a Dutch license plate, which is its yellow colour and can be seen on Figure \ref{fig:dutch-plate}, it is possible to reduce the area of the image where the license plate might be located through the application of colour segmentation. 
 
-% \figuur{width=0.45\textwidth}{plaatjes/car.jpg}{source-image}{Source car image.}
+
+\figuur{width=0.3\textwidth}{plaatjes/dutch-plate}{dutch-plate}{Dutch license plate.}
+
+Colour segmentation consists of grabbing only the areas of an image which fall within a specified range and is usually used on an image which uses the HSV colour space representation. As seen in Figure \ref{fig:hsv}, HSV stands for Hue, Saturation, and Value and it is a way of representing colours on a computer. This in contrast to the most widely used colour space, the RGB colour space (Red, Green, Blue) which uses a combination of three different colours to represent a specific colour, the HSV colour space uses the H-value to represent the colour and is defined in degrees (0$^{\circ}$ - 360$^{\circ}$), the S-value to represent how bleak or how colourful the colour is and is defined with a percentage (0\% - 100\%), and the V-value to represent how bright or dark a colour is and is defined the same way as the saturation. This provides a system where it is simple to specify a range of colour for the colour segmentation algorithm. The range chosen for the license plate lays between 40$^{\circ}$ and 50$^{\circ}$, which is broad enough to take into consideration the deviations in the colour of the plate caused by shadows and reflections.
+
+\figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
+
 
 \begin{figure}[h]
         \centering
@@ -74,6 +80,6 @@ The first step to finding a license plate is to find its vertical localization, 
                 \caption{Three possible bands.}
         \end{subfigure}%
 
-        % \caption{Drie bekende kunstwerken van Escher.}
+        \caption{Phases from band localization.}
         \label{fig:structCompare}
 \end{figure}
