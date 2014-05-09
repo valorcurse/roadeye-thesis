@@ -58,7 +58,9 @@ Colour segmentation consists of grabbing only the areas of an image which fall w
 \figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
 
 
-As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created and it is quite visible where the plate is located. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to increase the chance of finding plates instead of some random object. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, which in this case is the Sobel algorithm \textbf{`add ref here'}, we still get a visible area where the plate is located but in case the source image had large yellow area, these areas as now mostly gone.
+As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created and it is quite visible where the plate is located. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to increase the chance of finding plates instead of some random object. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, which in this case is the Sobel algorithm \textbf{`add ref here'} and the results are visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone. 
+
+Once that is done, the application can start analysing the previous image for a possible location of the license plate. This is done by summing up the intensity of every pixels on each row, therefore creating a graph of the density of edges on each row. Before making any decisions concerning the location of the plate on the graph, a filter must be applied to the data to decrease the chance of retrieving a wrong area of the image. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and by diving it by the total number of values. The results in the `smooth' graph displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by finding a number of the highest peaks in the graph, with three being the default. The reason for trying to find multiple areas, is in case an object on the image happens to have a higher edge density than the plate and therefore increasing the chance of still finding it. The way the application finds peaks, is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which equal to or smaller than 10\% of the highest value of the peak. The coordinates of both boundaries are then saved and the area in between both boundaries is made equal to zero, or \emph{zeroized}. By rinsing and repeating this process for the desired number of peaks, the bands are found and the images such as the ones also displayed on Figure \ref{fig:possible-bands} are created. 
 
 \begin{figure}[h]
         \centering
@@ -77,13 +79,19 @@ As a result of segmenting the yellow colour from the source image, the image in 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/edge-detection}
             \caption{Edge detection.}
+            \label{fig:edge-detected}
         \end{subfigure}%
 
         \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/3-peaks}
             \caption{Three possible bands.}
+            \label{fig:possible-bands}
         \end{subfigure}%
 
         \caption{Phases from band localization.}
         \label{fig:find-band}
 \end{figure}
+
+\paragraaf{Plates}
+
+
