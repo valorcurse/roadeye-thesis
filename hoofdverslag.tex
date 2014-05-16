@@ -1,5 +1,7 @@
 \hoofdstuk {Methodology}
 
+Before starting the development of the project, an important question became on how to find viable ways of solving the problems presented by the project's requirements and how to implement them once the solution has been found. For this reason some time was first spent searching for possible research and development methods and in the end the following methods were chosen.
+
 \paragraaf{Research method}
 
 The method applied for researching the problems of this project and its possible solutions is called \emph{literature review}. This method consists of researching what has already been published, which might be in the form of scientific or engineering papers, journals, thesis, etc., by accredited scientists, scholars or engineers concerning this assignment's topics. 
@@ -17,6 +19,8 @@ This method of software development brings multiple benefits: The complexity of 
 Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
 
 \hoofdstuk{Algorithms}
+
+When reasoning about what kind of main algorithms and/or software would be necessary to develop the application, it quickly came down to two categories: localising the plate within an image and parsing the text within the plate. After this realisation and researching the possibilities, the following choices were made.
 
 \paragraaf{Plate localization}
 
@@ -44,7 +48,7 @@ As explained before, image processing is rather heavy and it is necessary to use
 
 \hoofdstuk{Implementation}
 
-The application consists of three main components: the algorithms for finding the vertical and horizontal locations of the license plates, and the text recognition component. Both localization algorithms are based on the of \textbf{`Java ANPR add ref here'}, with some slight modifications to fit the requirements. The car in Figure \ref{fig:car-source} is used to demonstrate how the algorithm works.
+The application consists of three main components: the algorithms for finding the vertical and horizontal locations of the license plates, and the text recognition component. Both localization algorithms are based on the work of Martinský Ondrej \cite{javaanpr}, with some slight modifications to fit the requirements of this application. The car in Figure \ref{fig:car-source} is used to demonstrate how the algorithm works.
 
 \paragraaf{Bands}
 
@@ -93,6 +97,8 @@ Once that is done, the application can start analysing the previous image for th
 
 \paragraaf{Plates}
 
-After finding the bands, these can be further processed to find the exact location of the plate. Using the binary version of the band's image, a graph can be generated just like before, but instead of summing up all values on each row, the values of each column are now summed. Once the graph has been created, the mean-filter is also applied for the same reason as before. Using the filtered data the plate is then located by searching for the largest cluster of peaks, as shown in Figure \ref{fig:band-cropped}, which are equivalent to the letters on the plate. The algorithm works by iterating the graph until a data cluster is found, from which the algorithm then saves the start coordinate and keeps iterating the remainder of the graph until it reaches the end of the current cluster. The size of the cluster is then saved and after repeating this process for the every data cluster present in the graph, the largest one is chosen as the plate's location. This gives an image of the plate with a rather larger border of undesired parts of the image. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated. This returns the four vertices of the quadrangle box around the plate. Using these points the angle at which the plate is skewed can then be calculated.
+After finding the bands, these can be further processed to find the exact location of the plate. Using the binary version of the band's image, a graph can be generated just like before, but instead of summing up all values on each row, the values of each column are now summed. Once the graph has been created, the mean-filter is also applied for the same reason as before. Using the filtered data the plate is then located by searching for the largest cluster of peaks, as shown in Figure \ref{fig:band-cropped}, which are equivalent to the letters on the plate. The algorithm works by iterating the graph until a data cluster is found, from which the algorithm then saves the start coordinate and keeps iterating the remainder of the graph until it reaches the end of the current cluster. The size of the cluster is then saved and after repeating this process for the every data cluster present in the graph, the largest one is chosen as the plate's location. 
+
+This gives an image of the plate with a rather larger border of undesired parts of the image. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated, which returns the four vertices of the quadrangle box around the plate. Using these points the angle at which the plate is skewed can then be calculated and the image can then be de-skewed using the warp perspective algorithm \cite{warpperspective}.
 
 \figuur{width=0.3\textwidth}{plaatjes/band1-cropped}{band-cropped}{Plate location.}
