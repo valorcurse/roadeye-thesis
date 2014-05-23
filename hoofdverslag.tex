@@ -54,14 +54,25 @@ The application consists of three main components: the algorithms for finding th
 
 The first step to locating a license plate is to find its vertical location, which also known as a band. By making use of one of the most characteristic features of a Dutch license plate, which is its yellow colour and can be seen on Figure \ref{fig:dutch-plate}, it is possible to reduce the area of the image where the license plate might be located through the application of colour segmentation. 
 
-
-\figuur{width=0.3\textwidth}{plaatjes/dutch-plate}{dutch-plate}{Dutch license plate.}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{plaatjes/dutch-plate}
+    \caption{Dutch license plate.}
+    \label{fig:dutch-plate}
+\end{figure}
 
 Colour segmentation consists of fetching only the areas of an image which fall within a specified colour range and is usually used on an image which uses the HSV colour space representation. As seen in Figure \ref{fig:hsv}, HSV stands for Hue, Saturation, and Value and it is a way of representing colours on a computer. This in contrast to the most widely used colour space, the RGB colour space (Red, Green, Blue) which uses a combination of those very colours to represent a specific colour, the HSV colour space uses the H-value to represent the pixel's colour and is defined in degrees (0$^{\circ}$ - 360$^{\circ}$), the S-value to represent how bleak or how colourful the pixel is and is defined with a percentage (0\% - 100\%), and the V-value to represent its brightness or darkness and is defined the same way as the saturation. This provides a system where it is simple to choose a colour range for the colour segmentation algorithm. The range chosen for the license plate lays between 40$^{\circ}$ and 50$^{\circ}$, which is broad enough to take into consideration the deviations in the colour of the plate caused by shadows and reflections.
 
-\figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{plaatjes/hsv}
+    \caption{HSV colour space.}
+    \label{fig:hsv}
+\end{figure}
 
-As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to decreased the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel algorithm was used \textbf{`add ref here'} and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone. 
+% \figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
+
+As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to decreased the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel algorithm was used \textbf{`add ref here'} and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone.
 
 Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly which is necessary for a later stage. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. The results in the `smooth' graph displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
 
@@ -99,6 +110,49 @@ Once that is done, the application can start analysing the previous image for th
 
 After finding the bands, these can be further processed to find the exact location of the plate. Using the binary version of the band's image, a graph can be generated just like before, but instead of summing up all values on each row, the values of each column are now summed. Once the graph has been created, the mean-filter is also applied for the same reason as before. Using the filtered data the plate is then located by searching for the largest cluster of peaks, as shown in Figure \ref{fig:band-cropped}, which are equivalent to the letters on the plate. The algorithm works by iterating the graph until a data cluster is found, from which the algorithm then saves the start coordinate and keeps iterating the remainder of the graph until it reaches the end of the current cluster. The size of the cluster is then saved and after repeating this process for the every data cluster present in the graph, the largest one is chosen as the plate's location. 
 
-This gives an image of the plate with a rather larger border of undesired parts of the image. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated, which returns the four vertices of the quadrangle box around the plate. Using these points the angle at which the plate is skewed can then be calculated and the image can then be de-skewed using the warp perspective algorithm \cite{warpperspective}.
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.3\textwidth]{plaatjes/band1-cropped}
+    \caption{Horizontal localisation of the plate.}
+    \label{fig:band-cropped}
+\end{figure}
 
-\figuur{width=0.3\textwidth}{plaatjes/band1-cropped}{band-cropped}{Plate location.}
+This gives an image of the plate with a rather larger border of undesired parts of the image, as shown in Figure \ref{fig:skewed-plate}. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated, which returns the four vertices of a quadrangle around the plate and can be seen in Figure \ref{fig:skewed-bounding-box}. Using these points, the angle at which the plate is skewed can then be calculated and the image can then be de-skewed using the warp perspective algorithm \cite{warpperspective} as displayed in Figure \ref{fig:rotated-plate}. 
+
+Finally, only a few last steps are necessary to complete the localisation and processing of the plate before the OCR software takes over. Using the de-skewed plate, a binary image must then be created to allow for the removal of unwanted artefacts still present on the image, e.g. borders. The binary image is created by applying a threshold algorithm onto a greyscale version of the plate and converting every pixel with an intensity value above a certain threshold to a black pixel and every else to white, in this case this threshold is calculated using Otsu's method \cite{otsu} and is displayed in Figure \ref{fig:threshold-plate}. This method assumes the image consists of two types of pixels, foreground and background, and uses that premise to search for the optimum threshold value. This applies perfectly to the case of a license plate because the desired section of the plate, i.e. the text, is in the foreground while everything else is part of the background. After applying Otsu's method, a binary image containing the background in white and the text, eventually some artefacts, in black is created. The last step left to take is to discriminate the text from everything else and therefore creating an image fit for text recognition. This is accomplished by applying a contour finding algorithm \cite{suzuki}, which finds the outline of every item in the image. By using only the contours which are enclosed within another contour and in turn does not contain other contours within itself, as is the case of the letters' contours as it is located within the contour of the license plate and no further contour inside them. This is possible because the contours algorithm creates an hierarchy list of every contour and whether that contour has a parent and/or child. Once the correct contours have been found they are then drawn on another image, which can be seen in Figure \ref{fig:contour-text}.
+
+\begin{figure}[h]
+        \centering
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/skewed-plate}
+            \caption{Skewed plate.}
+            \label{fig:skewed-plate}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/skewed-plate-box}
+            \caption{Bounding box of the plate.}
+            \label{fig:skewed-bounding-box}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/rotated-plate}
+            \caption{De-skewed plate.}
+            \label{fig:rotated-plate}
+        \end{subfigure}%
+
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/remove-border-plate}
+            \caption{Threshold of plate.}
+            \label{fig:threshold-plate}
+        \end{subfigure}%
+        ~
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/contour-text}
+            \caption{Contours of text.}
+            \label{fig:contour-text}
+        \end{subfigure}%
+
+        \caption{Phases from the plate de-skewing process.}
+        \label{fig:deskewing-plate}
+\end{figure}
