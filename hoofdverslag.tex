@@ -5,7 +5,7 @@ Before starting the development of the project, an important question became on 
 \paragraaf{Research method}
 
 The method applied for researching the problems of this project and its possible solutions is called \emph{literature review}. This method consists of researching what has already been published, which might be in the form of scientific or engineering papers, journals, thesis, etc., by accredited scientists, scholars or engineers concerning this assignment's topics. 
-This method is applied for searching for potential algorithms which can be used to solve the problems facing the project. Once a group of the most suitable algorithms has been found, the best one must be chosen and the reasoning for this choice must be explained. When the choice has been made, the algorithm can then be implemented using the chosen development method.
+This method is applied for searching for potential algorithms which can be used to solve the problems facing the project. Once a group of the most suitable algorithms has been found, the best one must be chosen and the reasoning for this choice must be explained. When the choice has been made, the algorithm is then implemented using the chosen development method.
 
 \paragraaf{Development method}
 
@@ -50,6 +50,13 @@ As explained before, image processing is rather heavy and it is necessary to use
 
 The application consists of three main components: the algorithms for finding the vertical and horizontal locations of the license plates, and the text recognition component. Both localization algorithms are based on the work of Martinský Ondrej \cite{javaanpr}, with some slight modifications to fit the requirements of this application. The car in Figure \ref{fig:car-source} is used to demonstrate how the algorithm works.
 
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.40\textwidth]{plaatjes/car}
+    \caption{Source car image.}
+    \label{fig:car-source}
+\end{figure}%
+
 \paragraaf{Bands}
 
 The first step to locating a license plate is to find its vertical location, which also known as a band. By making use of one of the most characteristic features of a Dutch license plate, which is its yellow colour and can be seen on Figure \ref{fig:dutch-plate}, it is possible to reduce the area of the image where the license plate might be located through the application of colour segmentation. 
@@ -70,23 +77,23 @@ Colour segmentation consists of fetching only the areas of an image which fall w
     \label{fig:hsv}
 \end{figure}
 
-% \figuur{width=0.3\textwidth}{plaatjes/hsv}{hsv}{HSV colour space.}
+As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. Often the segmented image also contains speckles from various small objects present in the image. These speckles are also visible in the previously mentioned image and might cause invalid results when trying to locate the plate. To prevent this, a morphological closing operation \cite{morphclose} is performed
 
-As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to decreased the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel algorithm was used \textbf{`add ref here'} and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone.
+ \textbf{`part about removing the small speckles'}. Because there are such things as yellow cars and other yellow objects everywhere, an extra step must be taken to decreased the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel operator \cite{sobel} was used and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone.
 
 Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly which is necessary for a later stage. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. The results in the `smooth' graph displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
 
 \begin{figure}[h]
         \centering
-        \begin{subfigure}{0.37\textwidth}
-            \includegraphics[width=\textwidth]{plaatjes/car}
-            \caption{Source car image.}
-            \label{fig:car-source}
-        \end{subfigure}%
-       	~ 
-        \begin{subfigure}{0.3\textwidth}
+        % \begin{subfigure}{0.33\textwidth}
+        %     \includegraphics[width=\textwidth]{plaatjes/car}
+        %     \caption{Source car image.}
+        %     \label{fig:car-source}
+        % \end{subfigure}%
+       	% ~ 
+        \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/yellow-segment}
-            \caption{Yellow segmentation of source image.}
+            \caption{Colour segmentation.}
             \label{fig:color-segmented}
         \end{subfigure}%
         ~ 
@@ -98,7 +105,7 @@ Once that is done, the application can start analysing the previous image for th
 
         \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/3-peaks}
-            \caption{Three possible bands.}
+            \caption{Possible band(s).}
             \label{fig:possible-bands}
         \end{subfigure}%
 
@@ -112,14 +119,14 @@ After finding the bands, these can be further processed to find the exact locati
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.3\textwidth]{plaatjes/band1-cropped}
+    \includegraphics[width=0.5\textwidth]{plaatjes/plate-graph}
     \caption{Horizontal localisation of the plate.}
     \label{fig:band-cropped}
 \end{figure}
 
-This gives an image of the plate with a rather larger border of undesired parts of the image, as shown in Figure \ref{fig:skewed-plate}. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated, which returns the four vertices of a quadrangle around the plate and can be seen in Figure \ref{fig:skewed-bounding-box}. Using these points, the angle at which the plate is skewed can then be calculated and the image can then be de-skewed using the warp perspective algorithm \cite{warpperspective} as displayed in Figure \ref{fig:rotated-plate}. 
+This gives an image of the plate with a rather larger border of undesired parts of the image, as shown in Figure \ref{fig:skewed-plate}. The reason for this is that depending on the angle at which the image was captured at, the plate might be skewed and the text won't therefore be at a 90$^{\circ}$ angle. This makes it difficult for the OCR (Optical Character Recognition) software to recognize the text properly. To correct the skewness the bounding box of the plate must be calculated, which is a quadrangle that surrounds the plate's area and from where its four vertices can be retrieved. The box can be seen in Figure \ref{fig:skewed-bounding-box}. Using these points, the angle at which the plate is skewed can then be calculated and the image can then be de-skewed using the warp perspective algorithm \cite{warpperspective} as displayed in Figure \ref{fig:rotated-plate}. 
 
-Finally, only a few last steps are necessary to complete the localisation and processing of the plate before the OCR software takes over. Using the de-skewed plate, a binary image must then be created to allow for the removal of unwanted artefacts still present on the image, e.g. borders. The binary image is created by applying a threshold algorithm onto a greyscale version of the plate and converting every pixel with an intensity value above a certain threshold to a black pixel and every else to white, in this case this threshold is calculated using Otsu's method \cite{otsu} and is displayed in Figure \ref{fig:threshold-plate}. This method assumes the image consists of two types of pixels, foreground and background, and uses that premise to search for the optimum threshold value. This applies perfectly to the case of a license plate because the desired section of the plate, i.e. the text, is in the foreground while everything else is part of the background. After applying Otsu's method, a binary image containing the background in white and the text, eventually some artefacts, in black is created. The last step left to take is to discriminate the text from everything else and therefore creating an image fit for text recognition. This is accomplished by applying a contour finding algorithm \cite{suzuki}, which finds the outline of every item in the image. By using only the contours which are enclosed within another contour and in turn does not contain other contours within itself, as is the case of the letters' contours as it is located within the contour of the license plate and no further contour inside them. This is possible because the contours algorithm creates an hierarchy list of every contour and whether that contour has a parent and/or child. Once the correct contours have been found they are then drawn on another image, which can be seen in Figure \ref{fig:contour-text}.
+Finally, only a few last steps are necessary to complete the localisation and processing of the plate before the OCR software takes over. Using the de-skewed plate, a binary image must then be created to allow for the removal of unwanted artefacts still present on the image, e.g. borders. The binary image is created by applying a threshold algorithm onto a greyscale version of the plate, which converts every pixel with an intensity value above a certain threshold to a black pixel and every else to white, in this case this threshold is calculated using Otsu's method \cite{otsu} and is displayed in Figure \ref{fig:threshold-plate}. This method assumes the image consists of two types of pixels, foreground and background pixels, and uses that premise to search for the optimum threshold value. This applies perfectly to the case of a license plate because the desired section of the plate, i.e. the text, is in the foreground while everything else is part of the background. After applying Otsu's method, a binary image is created containing the background in white while the text and eventually some artefacts are in black. The last step left to take is to discriminate the text from everything else and therefore creating an image fit for text recognition. This is accomplished by applying a contour finding algorithm \cite{suzuki}, which finds the outline of every item in the image. By using only the contours which are enclosed within another contour and in turn do not contain other contours within themselves, as is the case of the letters' contours as they are located within the contour of the license plate and contain no further contours inside them. This is possible because the contours algorithm creates an hierarchy list of every contour and whether that contour has a parent and/or child. Once the correct contours have been found they are then drawn on another image, which can be seen in Figure \ref{fig:contour-text}.
 
 \begin{figure}[h]
         \centering
