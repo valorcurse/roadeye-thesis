@@ -22,7 +22,7 @@ The following requirements are used as the guidelines for the creation of the ap
 
 \hoofdstuk {Methodology}
 
-Before starting the development of the project, an important question is how to find viable ways of solving the problems presented by the project's requirements and how to implement them once the solution has been found. For this reason some time was first spent searching for possible research and development methods and in the end the following methods were chosen.
+Before starting the development of the project, an important question is how to find viable ways of solving the problems presented by the project's requirements and how to implement them once the solution has been found. For this reason some time was first spent searching for possible research and development methods, and suitable technologies. In the end the following choices were made.
 
 \paragraaf{Research method}
 
@@ -40,6 +40,18 @@ This method of software development brings multiple benefits: The complexity of 
 
 Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
 
+\paragraaf{Used technologies}
+
+\begin{itemize}
+    \item{\textbf{OpenCV Android} \\
+        A library which contains optimized state-of-the-art computer vision algorithms. This library is maintained by Intel, is completly open-source and has an Android version. Because of these reasons and prior experience working with this library, OpenCV was chosen.
+    }
+
+    \item{\textbf{Tesseract OCR} \\
+        Tesseract is an OCR library maintained by Google. It is one of the most accurate open-source OCR libraries available and has an Android version. It was chosen because no other open-source library can best it.
+    }
+\end{itemize}
+
 \hoofdstuk{Algorithms}
 
 When reasoning about what kind of main algorithms would be necessary to develop the application and after researching which software could be used to develop the applicaton, the problem was then broken down into two different categories: localising the plate within an image, because it is a very specific problem which requires a specific algorithm to solve, and parsing the text within the plate, which is a broader case and there are available libraries which can be promptly used to solve this problem. After this realisation and researching the possibilities, the following choices were made.
@@ -52,12 +64,28 @@ The feature detection algorithms works by finding so called \emph{features} in a
 
 The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection filter to a grey scale version of the image where the car is present, e.g. the Sobel Filter [ref here] or Canny Edge Filter [ref here]. This creates a binary image where the edges of every shape present in the image are displayed. Because of the nature of one of the characteristics common to every license plate, which is the presence of text, an area with a high density of edges is created. Although license plates are not the only objects which might have such a property, e.g. a fence, it is the most common one which might be encountered while driving. By applying this filter to find horizontal edges it is possible to find the vertical location of the plate and then vice-versa to find the horizontal location and by extension the plate itself. Due to little information on the performance of the first algorithm and an healthy amount of information regarding this one, this algorithm was chosen.
 
-\paragraaf{Text recognition}
-
-\textbf{`Explanation on training Tesseract'}
-
 \hoofdstuk{Design}
 
+\paragraaf{Privacy}
+According to the Dutch privacy law of personal information as of 2014, it is only transgressed if, while collecting license plate information, the following three requirements are met. The information must be:
+
+\begin{enumerate}
+    \item{\textbf{personal information} \\
+        The information gathered must qualify as personal information. This means the information must directly link to a certain person, e.g. phone number, address or name but also pictures of people's faces. The only instance which has access to the personal information linked to a license plate is the \textit{Rijksdienst voor het Wegverkeer}, which is a government instance, and therefore the only instance which would have to comply to the privacy law. It is possible to access that information through their services, but you need the information's owner's permission and have to pay a fee, which means accidental transgression of the law impossible is.
+    }
+
+    \item{\textbf{processed} \\
+        Processing information is a very broad concept, which can be anything from using the information for a website or just matching it against a database.
+    }
+
+    \item{\textbf{saved in a file} \\
+        This can be a simple spreadsheet or a full-fledged database.
+    }
+\end{enumerate}
+
+This application will only meet the second point, which means it will not violate the dutch privacy law. To add some additional certainty, the application will only save the license plate information for as long as necessary, will not save any pictures taken after they have been processed and the user will not have direct access to that information.
+
+\paragraaf{Application}
 The top-level flow of the system consists of three individual components: the website where the license plate information of stole cars is available, this android application which processes searches for that information in captured video images, and a central server where, if a match has been found between the previous two stages, the match information is sent to. A diagram of this flow can be seen in Figure \ref{fig:top-level}.
 
 \begin{figure}[ht]
@@ -78,8 +106,6 @@ As explained before, image processing is rather heavy and it is necessary to use
     \caption{Application flow diagram.}
     \label{fig:architecture}
 \end{figure}%
-
-% \figuur{width=\textwidth}{plaatjes/architecture-RoadEye-parallel.png}{architecture}{System flow diagram}
 
 % --------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -198,3 +224,23 @@ Finally, only a few last steps are necessary to complete the localisation and pr
         \caption{Phases from the plate de-skewing process.}
         \label{fig:deskewing-plate}
 \end{figure}
+
+\paragraaf{Text recognition}
+
+Although the Tesseract library works really well most of the time, it requires some training in some specific cases. The text displayed on license plates is one of those cases because it uses an unique font designed specifically to be used on plates. There is no official version of this font publicly available, but using LeFly's \cite{lefly} interpretation it was possible to train Tesseract to recognize this type of text. The font used for the training can be seen in Figure \ref{fig:plate-font}. Not every character has been added to the training text simply because not every character is used in license plates. The reasons for this range from characters which are reserved for special plates, e.g. the royal family or diplomats, or characters that are too alike, e.g. the `I' and the `1' or `O' and the `0'.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{plaatjes/font}
+    \caption{License plate font.}
+    \label{fig:plate-font}
+\end{figure}%
+
+Using the image displayed above and the external tools provided by the Tesseract library, training data can be generated. Tesseract does this by segmenting every item on the image and creating a file with its best guess at which character is represented on the image, its location on the image and its size. After this file has been checked for possible mistakes, it can then be used to generated further necessary files where information on the shape of the characters, etc. are stored. Finally all the data is then bundled into a single file which can later be used with the recognition software.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{plaatjes/text-data}
+    \caption{Font data.}
+    \label{fig:plate-font}
+\end{figure}%
