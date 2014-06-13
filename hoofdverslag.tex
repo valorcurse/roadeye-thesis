@@ -1,4 +1,6 @@
+% #####################################################################################################################################################################################
 \hoofdstuk{Requirements}
+% #####################################################################################################################################################################################
 
 Even though a general goal and vision are important for guiding the direction the application goes toward, they must be broken down into smaller, more concrete and measurable objectives in the form of requirements. These requirements are used to determine the project’s progress and whether it was completed successfully or not. The following requirements were deduced from the project’s problem and objective:
 
@@ -24,7 +26,9 @@ Even though a general goal and vision are important for guiding the direction th
     }
 \end{itemize}
 
+% #####################################################################################################################################################################################
 \hoofdstuk {Methodology}
+% #####################################################################################################################################################################################
 
 Before starting the development, the methods must be found which will be used to find viable ways of solving the problems presented by the requirements and how to implement them once the correct solutions have been found. For this reason some time was first spent searching for possible research and development methods, and suitable technologies. In the end the following choices were made.
 
@@ -44,7 +48,9 @@ This method of software development brings multiple benefits: The complexity of 
 
 Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
 
+% #####################################################################################################################################################################################
 \hoofdstuk{Algorithms}
+% #####################################################################################################################################################################################
 
 When reasoning about what kind of main algorithms would be necessary to develop the application and after researching which software could be used to develop the application, the problem was then broken down into two different categories: localising the plate within an image, because it is a very specific problem which requires a specific algorithm to solve, and parsing the text within the plate, which is a broader case and there are available libraries which can be promptly used to solve this problem. After this realisation and researching the possibilities, the following choices were made.
 
@@ -56,7 +62,9 @@ The feature detection algorithms work by finding so called \emph{features} in a 
 
 The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection filter to a grey scale version of the image where the car is present. This creates a binary image where the edges of every shape present in the image are displayed. Because of the nature of one of the characteristics common to every license plate, which is the presence of text, an area with a high density of edges is created. Although license plates are not the only objects which might have such a property, e.g. a fence, it is the most common one which might be encountered while driving. By applying this filter to find horizontal edges it is possible to find the vertical location of the plate and then vice-versa to find the horizontal location and by extension the plate itself. Due to little information on the performance of the feature detection algorithm and a healthy amount of information regarding this one, this algorithm was chosen.
 
+% #####################################################################################################################################################################################
 \hoofdstuk{Design}
+% #####################################################################################################################################################################################
 
 Before the application can be built, some sort of blueprint must be created where the functionality, the flow, and a variety of other specifications are incorporated and described. This is called the design of the application and it outlines what each component does, how they are interconnected, and the reasoning behind each choice.
 
@@ -103,9 +111,9 @@ As explained before, image processing is rather heavy and it is necessary to use
     \label{fig:architecture}
 \end{figure}%
 
-% --------------------------------------------------------------------------------------------------------------------------------------------------------------
-
+% #####################################################################################################################################################################################
 \hoofdstuk{Implementation}
+% #####################################################################################################################################################################################
 
 The application consists of three main components: the algorithms for finding the vertical and horizontal locations of the license plates, and the text recognition component. Both localization algorithms are based on the work of Martinský Ondrej \cite{ondrej2007algorithmic}, with some slight modifications, which are explained in the following chapters, to fit the requirements of this application. 
 
@@ -126,7 +134,7 @@ The algorithms use the car in Figure \ref{fig:car-source} to demonstrate how the
 
 The first step to locating a license plate is to find its vertical location, which also known as a band. Using one of the most characteristic features of a Dutch license plate, which is its yellow colour and can be seen on Figure \ref{fig:dutch-plate}, it is possible to reduce the area of the image where the license plate might be located through the application of colour segmentation. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.3\textwidth]{plaatjes/dutch-plate}
     \caption{Dutch license plate. \cite{dutch-license-fig}}
@@ -135,7 +143,7 @@ The first step to locating a license plate is to find its vertical location, whi
 
 Colour segmentation consists of fetching only the areas of an image which fall within a specified colour range and is usually used on an image which uses the HSV colour space representation. As seen in Figure \ref{fig:hsv}, HSV stands for Hue, Saturation, and Value and it is a way of representing colours on a computer. This in contrast to the most widely used colour space, the RGB colour space (Red, Green, Blue) which uses a combination of those very colours to represent a specific colour. The HSV colour space on the other hand uses the H-value to represent the pixel's colour and is defined in degrees (0$^{\circ}$ - 360$^{\circ}$), the S-value to represent how bleak or how colourful the pixel is and is defined with a percentage (0\% - 100\%), and the V-value to represent its brightness or darkness and is defined the same way as the saturation. This provides a system where it is simple to choose a colour range for the colour segmentation algorithm and is also the standard system for these kind of operations. The range chosen for the license plate lays between 40$^{\circ}$ and 50$^{\circ}$, which is broad enough to take into consideration the deviations in the colour of the plate caused by shadows and reflections.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.3\textwidth]{plaatjes/hsv}
     \caption{HSV colour space. \cite{hsv-fig}}
@@ -146,7 +154,7 @@ As a result of segmenting the yellow colour from the source image, the image in 
 
 Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly which is necessary for a later stage. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. The results in the `smooth' graph displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
         \centering
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/yellow-segment}
@@ -174,7 +182,7 @@ Once that is done, the application can start analysing the previous image for th
 
 After finding the bands, these can be further processed to find the exact location of the plate. Using the binary version of the band's image, a graph can be generated just like before, but instead of summing up all values on each row, the values of each column are now summed. Once the graph has been created, the mean-filter is also applied for the same reason as before. Using the filtered data the plate is then located by searching for the largest cluster of peaks, as shown in Figure \ref{fig:band-cropped}, which are equivalent to the letters on the plate. The algorithm works by iterating the graph until a data cluster is found, from which the algorithm then saves the start coordinate and keeps iterating the remainder of the graph until it reaches the end of the current cluster. The size of the cluster is then saved and after repeating this process for every data cluster present in the graph, the largest one is chosen as the plate's location. 
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.5\textwidth]{plaatjes/plate-graph}
     \caption{Horizontal localisation of the plate.}
@@ -185,7 +193,7 @@ This gives an image of the plate with a rather larger border of undesired parts 
 
 Finally, only a few last steps are necessary to complete the localisation and processing of the plate before the OCR software takes over. Using the de-skewed plate, a binary image must then be created to allow for the removal of unwanted artefacts still present on the image, e.g. borders. The binary image is created by applying a threshold algorithm onto a greyscale version of the plate, which converts every pixel with an intensity value above a certain threshold to a black pixel and everything else to white. The used threshold algorithm is an adaptive threshold algorithm, which gets its name because of its ability to adapt the threshold value of a pixel according to the neighbouring pixels. In this case the algorithm calculates the mean value of the sum of the pixels around the threshold pixel. This gives a better result than using a fixed value, because the lighting condition is not the same on every image, or a threshold algorithm like Otsu's method \cite{otsu} which requires a distinct difference between foreground and background, which is not always available in the case of a license plate. After applying the threshold algorithm, a binary image is created containing the background in white while the text and eventually some artefacts are in black. The last step left to take is to discriminate the text from everything else and therefore creating an image fit for text recognition. This is accomplished by applying a contour finding algorithm \cite{suzuki}, which finds the outline of every item in the image. By using only the contours which are enclosed within another contour and in turn do not contain other contours within themselves, as is the case of the letters' contours as they are located within the contour of the license plate and contain no further contours inside them. This is possible because the contours algorithm creates a hierarchy list of every contour and whether that contour has a parent and/or child. Once the correct contours have been found they are then drawn on another image, which can be seen in Figure \ref{fig:contour-text}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
         \centering
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/skewed-plate}
@@ -233,7 +241,7 @@ Although the results seen in the previous images are quite clear, depending on t
 Using the angle determined with the PCA algorithm, a shear transformation can then be applied to remove the inclination angle. Shear transformations are specifically used to add or remove slant angles to/from objects and are applied through an affine transformation \cite{berger1987geometry}. Affine transformations are mathematical functions which preserve the relations between points, straight line and planes in an image, which means that image can easily be transformed without worrying about if every point will end up on the correct place.
 
 
-\begin{figure}[H]
+\begin{figure}[ht]
     \centering
     \includegraphics[width=0.4\textwidth]{plaatjes/shear}
     \caption{Shear transformation. \cite{shear-fig}}
@@ -268,7 +276,7 @@ $\bigl(
 
 The x and y-scaling values are set to $1$ to prevent any modification in the size of the image, and the $a$ value is the angle calculated using the PCA algorithm but negative to reverse the slant angle. Applying this affine transformation to the characters of the plate in Figure \ref{fig:slanted-plate} results in Figure \ref{fig:unslanted-plate}.
 
-\begin{figure}[h]
+\begin{figure}[ht]
         \centering
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/skewed-car}
@@ -289,7 +297,7 @@ The x and y-scaling values are set to $1$ to prevent any modification in the siz
         \end{subfigure}%
 
         \caption{Process to unslant characters.}
-        \label{fig:deskewing-plate}
+        \label{fig:unslanting-plate}
 \end{figure}
 
 After this whole process, the plate is now ready to have the OCR software applied to it.
@@ -315,3 +323,13 @@ Using the image displayed above and the external tools provided by the Tesseract
 \end{figure}%
 
 Now if Tesseract is applied to the plate in Figure \ref{fig:unslanted-plate} using this training data, the results will be much better than without it.
+
+% #####################################################################################################################################################################################
+\hoofdstuk{Validation}
+% #####################################################################################################################################################################################
+
+To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which will in turn be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful.
+
+% #####################################################################################################################################################################################
+\hoofdstuk{Conclusion and recommendations}
+% #####################################################################################################################################################################################
