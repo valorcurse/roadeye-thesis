@@ -328,60 +328,66 @@ Now if Tesseract is applied to the plate in Figure \ref{fig:unslanted-plate} usi
 \hoofdstuk{Validation}
 % #####################################################################################################################################################################################
 
-To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which will in turn be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful.
+To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which will in turn be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful. These test would be focused on three elements: the maximum distance and angle at which the application will give reliable results and how well does it perform while in a driving car.
 
-\paragraaf{Distance}
+\paragraaf{Distance}%
 
-\begin{figure}[ht]
+The validation based on the distance was tested on 4 different distances, 3, 4, 5 and 6 meters, while standing straight in front of the vehicle. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognized is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
+
+% \clearpage
+
+\begin{figure}[H]
         \centering
-        \begin{subfigure}{0.50\textwidth}
+        \begin{subfigure}{0.3\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-3m-0a}
             \caption{Vehicle at 3 meters, 0$^{\circ}$.}
-            \label{fig:skewed-car}
+            \label{fig:3m-0a}
         \end{subfigure}%
         ~ 
-        \begin{subfigure}{0.50\textwidth}
+        \begin{subfigure}{0.3\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-0a}
             \caption{Vehicle at 4 meters, 0$^{\circ}$.}
-            \label{fig:slanted-plate}
+            \label{fig:4m-0a}
         \end{subfigure}%
         % ~ 
 
-        \begin{subfigure}{0.50\textwidth}
+        \begin{subfigure}{0.3\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-5m-0a}
             \caption{Vehicle at 5 meters, 0$^{\circ}$.}
-            \label{fig:unslanted-plate}
+            \label{fig:5m-0a}
         \end{subfigure}%
         ~
-        \begin{subfigure}{0.50\textwidth}
+        \begin{subfigure}{0.3\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-6m-0a}
             \caption{Vehicle at 6 meters, 0$^{\circ}$.}
-            \label{fig:unslanted-plate}
+            \label{fig:6m-0a}
         \end{subfigure}%
 
         \caption{Results at varied distances.}
-        \label{fig:unslanting-plate}
-\end{figure}
+        \label{fig:distance-test}
+\end{figure} %
 
 \paragraaf{Angle}
 
-\begin{figure}[ht]
+For the maximum angle test, angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47,5$^{\circ}$.
+
+\begin{figure}[H]
         \centering
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-47,5a}
             \caption{Vehicle at 4 meters, 47,5$^{\circ}$.}
-            \label{fig:skewed-car}
+            \label{fig:4m-47.5a}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-47,5a+}
             \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
-            \label{fig:slanted-plate}
+            \label{fig:4m-47.5a-more}
         \end{subfigure}%
         % ~ 
 
-        \caption{Results at varied distances.}
+        \caption{Results at varied angles.}
         \label{fig:unslanting-plate}
-\end{figure}
+\end{figure}%
 
-\paragraaf{Text recognition}
+\paragraaf{Real scenario}
