@@ -315,7 +315,7 @@ Although the Tesseract library works really well most of the time, it requires s
 
 Using the image displayed above and the external tools provided by the Tesseract library, training data can be generated. Tesseract does this by segmenting every item on the image and creating a file with its best guess at which character is represented on the image, its location on the image, and its size. This data is displayed in Figure \ref{fig:text-data}. After this file has been checked for possible mistakes, it can then be used to generated further necessary files where information on the shape of the characters, etc. are stored. Finally all the data is then bundled into a single file which can later be used with the recognition software.
 
-\begin{figure}[ht]
+\begin{figure}[H]
     \centering
     \includegraphics[width=0.3\textwidth]{plaatjes/text-data}
     \caption{Font data.}
@@ -330,23 +330,20 @@ Once the plate has been found and the text has been parsed, the only thing left 
 
 First the application must retrieve a list with information about license plates of cars which are being searched for. Without this step it won't be possible to match the parsed text. This list is retrieved from a specific website using an HTTP socket. The website used for this application was a local dummy website. The information was stored in the JavaScript Object Notation (JSON) format. This is a simple way of storing and sending information objects between servers and clients. Once the information was retrieved from the website, it is stored in a file on the smartphone's storage. This process runs on a timer, which repeats itself after a specified amount of time, 30 minutes being the default.
 
-The second part of this component is very simple. Once the text has been parsed, the application runs the parsed information through the database looking for a match. If a match is indeed found, the application will then retrieve the current GPS location and bundle it together with the plate information and the current time in a new JSON object and will the send it again via a HTTP socket.
+The second part of this component is very simple. Once the text has been parsed, the application runs the parsed information through the database looking for a match. If a match is indeed found, the application will then retrieve the current GPS location and bundle it together with the plate information and the current time in a new JSON object and will the send it again via a HTTP socket. An example of a JSON annotation is displayed in Figure \ref{fig:json}.
 
-\begin{lstlisting}
-[ { 
-    "Naam": "JSON",
-    "Type": "Gegevensuitwisselingsformaat",
-    "isProgrammeertaal": false,
-    "Zie ook": [ "XML", "ASN.1" ] 
-  },
-  { 
-    "Naam": "JavaScript",
-    "Type": "Programmeertaal",
-    "isProgrammeertaal": true,
-    "Jaar": 1995 
-  } 
-]
-\end{lstlisting}
+\begin{figure}
+    \begin{lstlisting}[language=json]
+    { 
+        "Plate": "XX-123-Y",
+        "Date": "01-01-1970 00:00",
+        "Latitude": "76.92061352",
+        "Longitude": "41.04492187" 
+    }
+    \end{lstlisting}
+    \caption{"JSON annotation example"}
+    \label{fig:json}
+\end{figure}
 
 % #####################################################################################################################################################################################
 \hoofdstuk{Validation}
