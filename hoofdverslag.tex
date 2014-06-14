@@ -324,6 +324,30 @@ Using the image displayed above and the external tools provided by the Tesseract
 
 Now if Tesseract is applied to the plate in Figure \ref{fig:unslanted-plate} using this training data, the results will be much better than without it.
 
+\paragraaf{Database matching}
+
+Once the plate has been found and the text has been parsed, the only thing left to do is to see if it's one of the cars the application is looking for. This component consists of two separate parts: matching the parse text with the database and updating the database.
+
+First the application must retrieve a list with information about license plates of cars which are being searched for. Without this step it won't be possible to match the parsed text. This list is retrieved from a specific website using an HTTP socket. The website used for this application was a local dummy website. The information was stored in the JavaScript Object Notation (JSON) format. This is a simple way of storing and sending information objects between servers and clients. Once the information was retrieved from the website, it is stored in a file on the smartphone's storage. This process runs on a timer, which repeats itself after a specified amount of time, 30 minutes being the default.
+
+The second part of this component is very simple. Once the text has been parsed, the application runs the parsed information through the database looking for a match. If a match is indeed found, the application will then retrieve the current GPS location and bundle it together with the plate information and the current time in a new JSON object and will the send it again via a HTTP socket.
+
+\begin{lstlisting}
+[ { 
+    "Naam": "JSON",
+    "Type": "Gegevensuitwisselingsformaat",
+    "isProgrammeertaal": false,
+    "Zie ook": [ "XML", "ASN.1" ] 
+  },
+  { 
+    "Naam": "JavaScript",
+    "Type": "Programmeertaal",
+    "isProgrammeertaal": true,
+    "Jaar": 1995 
+  } 
+]
+\end{lstlisting}
+
 % #####################################################################################################################################################################################
 \hoofdstuk{Validation}
 % #####################################################################################################################################################################################
@@ -387,7 +411,7 @@ For the maximum angle test, angles were tested in an incremental way. Starting a
         % ~ 
 
         \caption{Results at varied angles.}
-        \label{fig:unslanting-plate}
+        \label{fig:angle-test}
 \end{figure}%
 
 \paragraaf{Real scenario}
