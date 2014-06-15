@@ -2,7 +2,7 @@
 \hoofdstuk{Requirements}
 % #####################################################################################################################################################################################
 
-Even though a general goal and vision are important for guiding the direction the application goes toward, they must be broken down into smaller, more concrete and measurable objectives in the form of requirements. These requirements are used to determine the project’s progress and whether it was completed successfully or not. The following requirements were deduced from the project’s problem and objective:
+Even though a general goal and vision are important for guiding which direction the application goes towards, they must be broken down into smaller, more concrete and measurable objectives.. These are called requirements and are used to determine the project’s progress and whether it was completed successfully or not. The following requirements were deduced from the project’s problem and objective:
 
 \begin{itemize}
     \item{\textbf{The application must be able to locate the license plate within an image.} \\
@@ -18,7 +18,7 @@ Even though a general goal and vision are important for guiding the direction th
     }
 
     \item{\textbf{The application must be able to match the recognised text in the license plate to the retrieved list.} \\
-        The application must be able to match the retrieved information of stolen vehicles with the recognized text.
+        The application must be able to match the retrieved information of stolen vehicles with the recognised text.
     }
 
     \item{\textbf{The application must be not save any information/images longer than necessary.} \\
@@ -61,6 +61,16 @@ When searching for possible algorithms which make it possible to find license pl
 The feature detection algorithms work by finding so called \emph{features} in a image, which are used to recognize the first image within a second one. These features are segments of an image which must be uncommon, as to reduce the possibility of retrieving a false positive when applying the algorithm, and also consist of something which can be objectively described to a computer. Because of these requirements, the features extracted from images are usually corners since corners usually only match themselves when compared to other segments in an image. This opposed to flat surfaces or lines, which may appear multiple times in multiple places in the same image. Because this algorithm focuses on detecting the uniqueness of an image and using those attributes to detect themselves in different images, it is difficult to use feature detection for the recognition of license plates for the reason that every license plate contains unique text. The considerable collection of diverse shapes that exist in the Latin alphabet create false positives which are often detected in random and incorrect locations. One possible approach to use this algorithm would be by creating a feature database of every possible alphanumeric character and then finding the highest concentration of text as a possible location. 
 
 The other possible algorithm is mostly based on edge detection. This kind of algorithm works by applying an edge detection filter to a grey scale version of the image where the car is present. This creates a binary image where the edges of every shape present in the image are displayed. Because of the nature of one of the characteristics common to every license plate, which is the presence of text, an area with a high density of edges is created. Although license plates are not the only objects which might have such a property, e.g. a fence, it is the most common one which might be encountered while driving. By applying this filter to find horizontal edges it is possible to find the vertical location of the plate and then vice-versa to find the horizontal location and by extension the plate itself. Due to little information on the performance of the feature detection algorithm and a healthy amount of information regarding this one, this algorithm was chosen.
+
+This algorithm was implemented using Open Computer Vision (OpenCV) library which is a library that contains optimized state-of-the-art computer vision algorithms. This library is maintained by Intel, a company known for its mathematical knowledge, is completely free, as in beer and as in freedom, and has an Android version. Because of these reasons and prior experience working with this library, OpenCV was chosen. Although the application was implemented using this library, this thesis explains the algorithms usage in a general, OpenCV-agnostic way as to be easier to understand the algorithms without the need for the library.
+
+
+\paragraaf{Text recognition}
+
+Text recognition is a specific problem which will only vary slightly from project to project, which usually means it has to be trained to recognize a different font or the text to be recognised has a special orientation, e.g. vertical or diagonal. There are libraries which have specifically this functionality along with enough customizability to adjust the library to the specific needs of the project. There is for this reason no need to create an own text recognition algorithm.
+From the available options in OCR technology, the Tesseract Optical Character Recognition (OCR) was chosen because it is maintained by Google, a company known for its OCR technology, and it is one of the most accurate free OCR libraries available and also has an Android version. It was chosen because no there are no other free library available which can deliver the same type of results. The implementation of the text recognition is Tesseract specific because, as op
+
+
 
 % #####################################################################################################################################################################################
 \hoofdstuk{Design}
@@ -116,12 +126,7 @@ As explained before, image processing is rather heavy and it is necessary to use
 % #####################################################################################################################################################################################
 
 The application consists of three main components: the algorithms for finding the vertical and horizontal locations of the license plates, and the text recognition component. Both localization algorithms are based on the work of Martinský Ondrej \cite{ondrej2007algorithmic}, with some slight modifications, which are explained in the following chapters, to fit the requirements of this application. 
-
-Both algorithms used to find the plate were implemented using Open Computer Vision (OpenCV) library. This library contains optimized state-of-the-art computer vision algorithms. This library is maintained by Intel, a company known for its mathematical knowledge, is completely free, as in beer and as in freedom, and has an Android version. Because of these reasons and prior experience working with this library, OpenCV was chosen. Although the application was implemented using this library, this thesis explains the algorithms usage in a general, OpenCV-agnostic way as to be easier to understand the algorithms without the need for the library.
-
-As for the text recognition component, the Tesseract Optical Character Recognition (OCR) was chosen because  it is maintained by Google, a company known for its OCR technology, and it is one of the most accurate free OCR libraries available and also has an Android version. It was chosen because no there are no other free library available which can deliver the same type of results. The implementation of the text recognition is Tesseract specific because, as op
-
-The algorithms use the car in Figure \ref{fig:car-source} to demonstrate how they works.
+The algorithms use the car in Figure \ref{fig:car-source} to demonstrate how they work.
 
 \begin{figure}[ht]
     \centering
@@ -341,7 +346,7 @@ The second part of this component is very simple. Once the text has been parsed,
         "Longitude": "41.04492187" 
     }
     \end{lstlisting}
-    \caption{"JSON annotation example"}
+    \caption{JSON annotation example}
     \label{fig:json}
 \end{figure}
 
@@ -353,32 +358,32 @@ To define where the strengths and weaknesses of the software lie, some validatio
 
 \paragraaf{Distance}%
 
-The validation based on the distance was tested on 4 different distances, 3, 4, 5 and 6 meters, while standing straight in front of the vehicle. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognized is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
+The validation based on the distance was tested on 4 different distances, 3, 4, 5 and 6 meters, while standing straight in front of the vehicle. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
 
 % \clearpage
 
-\begin{figure}[H]
+\begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.3\textwidth}
+        \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-3m-0a}
             \caption{Vehicle at 3 meters, 0$^{\circ}$.}
             \label{fig:3m-0a}
         \end{subfigure}%
         ~ 
-        \begin{subfigure}{0.3\textwidth}
+        \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-0a}
             \caption{Vehicle at 4 meters, 0$^{\circ}$.}
             \label{fig:4m-0a}
         \end{subfigure}%
         % ~ 
 
-        \begin{subfigure}{0.3\textwidth}
+        \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-5m-0a}
             \caption{Vehicle at 5 meters, 0$^{\circ}$.}
             \label{fig:5m-0a}
         \end{subfigure}%
         ~
-        \begin{subfigure}{0.3\textwidth}
+        \begin{subfigure}{0.5\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-6m-0a}
             \caption{Vehicle at 6 meters, 0$^{\circ}$.}
             \label{fig:6m-0a}
