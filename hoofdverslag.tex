@@ -416,4 +416,34 @@ For the maximum angle test, angles were tested in an incremental way. Starting a
         \label{fig:angle-test}
 \end{figure}%
 
+\paragraaf{Text recognition}
+
+To find out how well the text recognition work, images from different scenarios are used to test. One of the problems that haunt text recognition are characters that are similar in shape and this application is no stranger to that kind of problem. Even though most similar characters have been removed from license plates, i.e. the `0' and the `O', there are still characters that look similar enough when the plate is far away or at a difficult angle. For example, in Figure \ref{fig:real-scenario-1} the character `S' is continuously recognized as the number `5' because of the shape similarity, or in Figures \ref{fig:6m-0a} and \ref{fig:4m-47.5a-more} the character `X' is recognized as a `Z' because of the distance or angle of the image. 
+
 \paragraaf{Real scenario}
+
+Once the limitations of the application have been found, this data must be tested on a real scenario to see how well the application handles real usage. In Figure \ref{fig:real-scenario-1} the application is able to find the plate perfectly and parse the text almost correctly, because the vehicle is within the maximum distance and angle discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself. Possible solutions for the problems discovered in this chapter are discussed in the recommendations chapter.
+\begin{figure}[H]
+        \centering
+        \begin{subfigure}{0.50\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/real-scenario-1}
+            \caption{Vehicle at 4 meters, 47,5$^{\circ}$.}
+            \label{fig:real-scenario-1}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}{0.50\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/real-scenario-2}
+            \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
+            \label{fig:real-scenario-2}
+        \end{subfigure}%
+        % ~ 
+
+        \begin{subfigure}{0.50\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/real-scenario-3}
+            \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
+            \label{fig:real-scenario-3}
+        \end{subfigure}%
+
+        \caption{Results at varied angles.}
+        \label{fig:real-scenario}
+\end{figure}%
