@@ -234,76 +234,76 @@ Finally, only a few last steps are necessary to complete the localisation and pr
         \label{fig:deskewing-plate}
 \end{figure}
 
-Although the results seen in the previous images are quite clear, depending on the angle the original image was taken, it is possible that the characters are slanted. This creates situations when the OCR software cannot recognize the character properly and might even confuse the character for a different one, causing a false positive. To circumvent this problem, the angle at which the character is slanted must be calculated and rectified. This can be done using an Principal Component Analyser (PCA) algorithm. This kind of algorithm is used to find a linear pattern within a dataset and if that dataset happens to be a character, it calculates the direction it is ``pointing'' to. Using that information the angle a which the character is slanted can be calculated. In Figure \ref{fig:pca-line} an example is shown of how a PCA algorithm works. To exemplify how this whole process would apply to a plate, the image on Figure \ref{fig:skewed-car} would be used as a source image.
+% Although the results seen in the previous images are quite clear, depending on the angle the original image was taken, it is possible that the characters are slanted. This creates situations when the OCR software cannot recognize the character properly and might even confuse the character for a different one, causing a false positive. To circumvent this problem, the angle at which the character is slanted must be calculated and rectified. This can be done using an Principal Component Analyser (PCA) algorithm. This kind of algorithm is used to find a linear pattern within a dataset and if that dataset happens to be a character, it calculates the direction it is ``pointing'' to. Using that information the angle a which the character is slanted can be calculated. In Figure \ref{fig:pca-line} an example is shown of how a PCA algorithm works. To exemplify how this whole process would apply to a plate, the image on Figure \ref{fig:skewed-car} would be used as a source image.
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\textwidth]{plaatjes/pca_line}
-    \caption{PCA linear pattern. \cite{pca-line-fig}}
-    \label{fig:pca-line}
-\end{figure}%
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=0.4\textwidth]{plaatjes/pca_line}
+%     \caption{PCA linear pattern. \cite{pca-line-fig}}
+%     \label{fig:pca-line}
+% \end{figure}%
 
-Using the angle determined with the PCA algorithm, a shear transformation can then be applied to remove the inclination angle. Shear transformations are specifically used to add or remove slant angles to/from objects and are applied through an affine transformation \cite{berger1987geometry}. Affine transformations are mathematical functions which preserve the relations between points, straight line and planes in an image, which means that image can easily be transformed without worrying about if every point will end up on the correct place.
+% Using the angle determined with the PCA algorithm, a shear transformation can then be applied to remove the inclination angle. Shear transformations are specifically used to add or remove slant angles to/from objects and are applied through an affine transformation \cite{berger1987geometry}. Affine transformations are mathematical functions which preserve the relations between points, straight line and planes in an image, which means that image can easily be transformed without worrying about if every point will end up on the correct place.
 
 
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\textwidth]{plaatjes/shear}
-    \caption{Shear transformation. \cite{shear-fig}}
-    \label{fig:shear}
-\end{figure}%
+% \begin{figure}[ht]
+%     \centering
+%     \includegraphics[width=0.4\textwidth]{plaatjes/shear}
+%     \caption{Shear transformation. \cite{shear-fig}}
+%     \label{fig:shear}
+% \end{figure}%
 
-These transformations are applied by multiplying every point in a figure by a matrix built for that specific operation. This method can be used for operations as scaling, translations, rotations and shearing by creating a matrix which specifies each transformation in the following manner: 
-$\bigl(
-    \begin{smallmatrix}
-        x-scaling & shear-angle & x-translation \\ 
-        rotation & y-scaling & y-translation
-    \end{smallmatrix} 
-\bigr)$
-. In this case only shearing will be applied, and that is accomplished by using the matrix displayed in Equation \ref{eq:shear-matrix}. 
+% These transformations are applied by multiplying every point in a figure by a matrix built for that specific operation. This method can be used for operations as scaling, translations, rotations and shearing by creating a matrix which specifies each transformation in the following manner: 
+% $\bigl(
+%     \begin{smallmatrix}
+%         x-scaling & shear-angle & x-translation \\ 
+%         rotation & y-scaling & y-translation
+%     \end{smallmatrix} 
+% \bigr)$
+% . In this case only shearing will be applied, and that is accomplished by using the matrix displayed in Equation \ref{eq:shear-matrix}. 
 
-\begin{equation}
-    \begin{pmatrix}
-        x' \\
-        y'
-    \end{pmatrix}
-    =
-    \begin{pmatrix}
-        1 & -a & 0 \\
-        0 & 1 & 0
-    \end{pmatrix}
-    \begin{pmatrix}
-        x \\
-        y
-    \end{pmatrix}
-    \label{eq:shear-matrix}
-\end{equation}
+% \begin{equation}
+%     \begin{pmatrix}
+%         x' \\
+%         y'
+%     \end{pmatrix}
+%     =
+%     \begin{pmatrix}
+%         1 & -a & 0 \\
+%         0 & 1 & 0
+%     \end{pmatrix}
+%     \begin{pmatrix}
+%         x \\
+%         y
+%     \end{pmatrix}
+%     \label{eq:shear-matrix}
+% \end{equation}
 
-The x and y-scaling values are set to $1$ to prevent any modification in the size of the image, and the $a$ value is the angle calculated using the PCA algorithm but negative to reverse the slant angle. Applying this affine transformation to the characters of the plate in Figure \ref{fig:slanted-plate} results in Figure \ref{fig:unslanted-plate}.
+% The x and y-scaling values are set to $1$ to prevent any modification in the size of the image, and the $a$ value is the angle calculated using the PCA algorithm but negative to reverse the slant angle. Applying this affine transformation to the characters of the plate in Figure \ref{fig:slanted-plate} results in Figure \ref{fig:unslanted-plate}.
 
-\begin{figure}[ht]
-        \centering
-        \begin{subfigure}{0.33\textwidth}
-            \includegraphics[width=\textwidth]{plaatjes/skewed-car}
-            \caption{Slanted plate source image.}
-            \label{fig:skewed-car}
-        \end{subfigure}%
-        ~ 
-        \begin{subfigure}{0.33\textwidth}
-            \includegraphics[width=\textwidth]{plaatjes/slanted-plate}
-            \caption{Slanted plate characters.}
-            \label{fig:slanted-plate}
-        \end{subfigure}%
-        ~ 
-        \begin{subfigure}{0.33\textwidth}
-            \includegraphics[width=\textwidth]{plaatjes/unslanted-plate}
-            \caption{Unslanted plate characters.}
-            \label{fig:unslanted-plate}
-        \end{subfigure}%
+% \begin{figure}[ht]
+%         \centering
+%         \begin{subfigure}{0.33\textwidth}
+%             \includegraphics[width=\textwidth]{plaatjes/skewed-car}
+%             \caption{Slanted plate source image.}
+%             \label{fig:skewed-car}
+%         \end{subfigure}%
+%         ~ 
+%         \begin{subfigure}{0.33\textwidth}
+%             \includegraphics[width=\textwidth]{plaatjes/slanted-plate}
+%             \caption{Slanted plate characters.}
+%             \label{fig:slanted-plate}
+%         \end{subfigure}%
+%         ~ 
+%         \begin{subfigure}{0.33\textwidth}
+%             \includegraphics[width=\textwidth]{plaatjes/unslanted-plate}
+%             \caption{Unslanted plate characters.}
+%             \label{fig:unslanted-plate}
+%         \end{subfigure}%
 
-        \caption{Process to unslant characters.}
-        \label{fig:unslanting-plate}
-\end{figure}
+%         \caption{Process to unslant characters.}
+%         \label{fig:unslanting-plate}
+% \end{figure}
 
 After this whole process, the plate is now ready to have the OCR software applied to it.
 

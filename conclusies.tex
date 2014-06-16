@@ -29,3 +29,48 @@ Because of the nature of this application, it brings a couple of problems to its
 
 
 \hoofdstuk{Recommendations}
+
+\paragraaf{Distance and speed}
+
+The distance and speed at which the application is able to capture images is entirely dependent on the hardware of the smartphone. A better camera allows for either a very high resolution to be used at a decent frame rate, which would improve the distance and the quality of the text recognition, or a lower resolution with a higher frame rate, which would allow the capture of plates from cars which are driving in the opposite direction. Beware that with a higher resolution, the processing time of the application would rise significantly.
+
+\paragraaf{Angle}
+
+To improve the angle at which the application is able to retrieve the characters correctly, aside from a better camera, a Principal Component Analyser (PCA) algorithm could be applied. This kind of algorithm is used to find a linear pattern within a dataset and if that dataset happens to be a character, it calculates the direction it is ``pointing'' to. Using that information the angle a which the character is slanted can be calculated. In Figure \ref{fig:pca-line} an example is shown of how a PCA algorithm works. Using the calculate angle, a shear transform can then be applied to remove the slant of a character.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.4\textwidth]{plaatjes/pca_line}
+    \caption{PCA linear pattern. \cite{pca-line-fig}}
+    \label{fig:pca-line}
+\end{figure}%
+
+\begin{figure}[ht]
+        \centering
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/slanted-plate}
+            \caption{Slanted plate characters.}
+            \label{fig:slanted-plate}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/unslanted-plate}
+            \caption{Unslanted plate characters.}
+            \label{fig:unslanted-plate}
+        \end{subfigure}%
+
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/plate-no-slant}
+            \caption{Slanted plate characters.}
+            \label{fig:slanted-plate}
+        \end{subfigure}%
+        ~ 
+        \begin{subfigure}{0.33\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/unslanted-incorrectly}
+            \caption{Unslanted plate characters.}
+            \label{fig:unslanted-plate}
+        \end{subfigure}%
+
+        \caption{Process to unslant characters.}
+        \label{fig:unslanting-plate}
+\end{figure}
