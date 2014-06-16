@@ -36,14 +36,7 @@ The distance and speed at which the application is able to capture images is ent
 
 \paragraaf{Angle}
 
-To improve the angle at which the application is able to retrieve the characters correctly, aside from a better camera, a Principal Component Analyser (PCA) algorithm could be applied. This kind of algorithm is used to find a linear pattern within a dataset and if that dataset happens to be a character, it calculates the direction it is ``pointing'' to. Using that information the angle a which the character is slanted can be calculated. In Figure \ref{fig:pca-line} an example is shown of how a PCA algorithm works. Using the calculate angle, a shear transform can then be applied to remove the slant of a character.
-
-\begin{figure}[ht]
-    \centering
-    \includegraphics[width=0.4\textwidth]{plaatjes/pca_line}
-    \caption{PCA linear pattern. \cite{pca-line-fig}}
-    \label{fig:pca-line}
-\end{figure}%
+To improve the angle at which the application is able to retrieve the characters correctly, aside from a better camera, a Principal Component Analyser (PCA) algorithm could be applied. This kind of algorithm is used to find a linear pattern within a dataset and if that dataset happens to be a character, it calculates the direction it is ``pointing'' to. Using that information the angle a which the character is slanted can be calculated. Using the calculate angle, a shear transform can then be applied to remove the slant of a character, as displayed in Figure \ref{fig:slanted-plate} and \ref{fig:unslanted-plate}. Although it works most fine most of the times, there are some characters from which the angle is incorrectly calculated and results worse off than before, e.g. \ref{fig:not-slanted-plate} and \ref{fig:incorrectly-unslanted-plate}. To solve this the algorithm must be modified to work better with characters.
 
 \begin{figure}[ht]
         \centering
@@ -61,14 +54,14 @@ To improve the angle at which the application is able to retrieve the characters
 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/plate-no-slant}
-            \caption{Slanted plate characters.}
-            \label{fig:slanted-plate}
+            \caption{Not slanted plate characters.}
+            \label{fig:not-slanted-plate}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/unslanted-incorrectly}
-            \caption{Unslanted plate characters.}
-            \label{fig:unslanted-plate}
+            \caption{Incorrectly unslanted plate characters.}
+            \label{fig:incorrectly-unslanted-plate}
         \end{subfigure}%
 
         \caption{Process to unslant characters.}
