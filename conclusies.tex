@@ -4,6 +4,8 @@ At the start of this thesis the following questions were asked: `How can license
 
 \paragraaf{How can license plate information be gathered from the images of a smartphone camera using software?}
 
+Because this project was focused only on Dutch yellow rectangular car license plates, the algorithm was therefore specifically created for that purpose. The first step is to remove everything in the image that is not yellow. This leaves a binary image where in most cases a clear area where the plate is present. Yet because there are yellow cars or other objects with large yellow areas, before grabbing that area as the plate's location, an edge detection algorithm is applied to the the binary image to retrieve only the edges of the objects. The reason for this is to prevent those large yellow areas and to increase the change of finding the correct area by using one characteristic of a license plate, a high edge density thanks to the presence of text on the plate. Once the edges images has been created, all the values are summed up per row. This creates a graph with which the vertical location of the plate can be found by searching for the broadest group of peaks. By applying this method to the three broadest group of peaks present in the graph, three possible vertical locations of the license plate are found, also known as `bands'. The reason for multiple bands is to increase the change of finding the plate. By applying the same method but now for every column on all bands and applying some constraint filters to the possible plate, the full location of the plate is found. It's possible the plate is rotated depending on the angle the image was captured at. To solve this, the angle of the plate is calculated and transformed. The correct plate has a contour finding algorithm applied to, so the characters within the plate can be retrieved. This image can then be given to the text recognition software to parse the text.
+
 \paragraaf{How can the software be optimized to work in a correct way from within a mobile device?}
 
 Because smartphones are limited devices when it comes to processing power, when creating such an application these limitations must be taken into account. This was solved using two different approaches: multi-threading and buffers.
@@ -42,28 +44,32 @@ To improve the angle at which the application is able to retrieve the characters
         \centering
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/slanted-plate}
-            \caption{Slanted plate characters.}
+            \caption{Slanted characters.}
             \label{fig:slanted-plate}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/unslanted-plate}
-            \caption{Unslanted plate characters.}
+            \caption{Unslanted characters.}
             \label{fig:unslanted-plate}
         \end{subfigure}%
 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/plate-no-slant}
-            \caption{Not slanted plate characters.}
+            \caption{Not slanted characters.}
             \label{fig:not-slanted-plate}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.33\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/unslanted-incorrectly}
-            \caption{Incorrectly unslanted plate characters.}
+            \caption{Incorrectly unslanted characters.}
             \label{fig:incorrectly-unslanted-plate}
         \end{subfigure}%
 
         \caption{Process to unslant characters.}
         \label{fig:unslanting-plate}
 \end{figure}
+
+\paragraaf{Text recognition}
+
+One way to solve the problem of similar shape characters being wrongly recognised is to create a dictionary where similar characters are grouped together. Every time one of these characters is recognised, the other characters in the group can be given as a possible alternative and a confidence percentage can be calculated according to which characters are present in the text.
