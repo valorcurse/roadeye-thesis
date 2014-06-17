@@ -67,8 +67,8 @@ This algorithm was implemented using Open Computer Vision (OpenCV) library which
 
 \paragraaf{Text recognition}
 
-Text recognition is a specific problem which will only vary slightly from project to project, which usually means it has to be trained to recognize a different font or the text to be recognised has a special orientation, e.g. vertical or diagonal. There are libraries which have specifically this functionality along with enough customizability to adjust the library to the specific needs of the project. There is for this reason no need to create an own text recognition algorithm.
-From the available options in OCR technology, the Tesseract Optical Character Recognition (OCR) was chosen because it is maintained by Google, a company known for its OCR technology, and it is one of the most accurate free OCR libraries available and also has an Android version. It was chosen because no there are no other free library available which can deliver the same type of results. The implementation of the text recognition is Tesseract specific because, as op
+Text recognition is a specific problem which will only vary slightly from project to project, which usually means it has to be trained to recognize a different font or the text to be recognised has a special orientation, e.g. vertical or diagonal. There are libraries which have this specific functionality along with enough customisability to adjust the library to the specific needs of a project. There is for this reason no need to create an own text recognition algorithm.
+From the available options in OCR technology, the Tesseract Optical Character Recognition (OCR) was chosen because it is maintained by Google, a company known for its OCR technology, because it is one of the most accurate free OCR libraries available, and because it also has an Android version. It was chosen because no there are no other free library available which can deliver the same type of results. The implementation of the text recognition is Tesseract specific because, as opposed to the plate localisation algorithm, it uses a very specific software package instead of a collection of algorithms.
 
 
 
@@ -111,7 +111,7 @@ The top-level flow of the system consists of three individual components: the we
 
 Although all those three components are part of the whole system, this project only focuses on the application itself. A flowchart illustrating the general design and flow of the application is displayed in Figure \ref{fig:architecture}. Within an Android application all components run in the same thread by default, which is also known as the `main thread', and is identified in the flowchart as `UI' because it is used mainly to regulate all the processes related to the user interface. One of those processes, and also one of the most fundamental running in this thread, is the process which captures images from the device's camera. The process captures image frames at a set rate in order to avoid the unnecessary capture of very similar images and, because image processing algorithms consist of a large number of calculations and therefore might take a long time to finish, to avoid overwhelming the application with too many frames. These images are then pushed into a buffer, called `Frames buffer', where they are kept until they are able to be processed. For the same reasons the camera only captures frames at a specific rate, this buffer has a limit of how many frames can be stored within but with the intention of only preserving images which are as recent as possible, before a new frame is added the oldest remaining frame in the buffer is removed. This process runs until the application is terminated.
 
-As explained before, image processing is rather heavy and it is necessary to use every tool available to increase the application's performance. One of these tools is multi-threading and apart from the UI thread this application uses two other kinds of threads, up to a total of four threads which is also the number of physical cores in the used device and therefore gives every thread a dedicated core. The processes called `Find bands' and `Find plate' use a type of thread called a \emph{One-Call Thread}, which are threads used for a short period of time and only run when called. The other kind of thread is called a \emph{Permanent thread}. This type of thread is started during the initiation of the application, runs parallel to the UI thread and lives as long as the application itself. This process is responsible for checking whether the bands and plates buffers have available items and for calling the respective processes to process them. Further, if a plate is found then this thread applies text recognition to retrieve the displayed text and tries to match it with the database entries. If there is a match, the application will save the plate information for a defined amount of time, the default being 30 minutes, to prevent sending the same of very similar information about the whereabouts of the vehicle every time the application recognizes the plate. Furthermore, the plate's information will be bundled together with the current location of the smartphone, the current time and the confidence of the recognition. This bundled message will then be sent to a central server where it can then be distributed to the correct authorities. After this has been done or if there wasn't a match, the system starts again from the beginning.
+As explained before, image processing is rather heavy and it is necessary to use every tool available to increase the application's performance. One of these tools is multi-threading and apart from the UI thread this application uses two other kinds of threads, up to a total of four threads which is also the number of physical cores in the used device and therefore gives every thread a dedicated core. The processes called `Find bands' and `Find plate' use a type of thread called a \emph{One-Call Thread}, which are threads used for a short period of time and only run when called. The other kind of thread is called a \emph{Permanent thread}. This type of thread is started during the initiation of the application, runs parallel to the UI thread and lives as long as the application itself. This process is responsible for checking whether the bands and plates buffers have available items and for calling the respective processes to process them. Further, if a plate is found then this thread applies text recognition to retrieve the displayed text and tries to match it with the database entries. If there is a match, the application will save the plate information for a defined amount of time, the default being 30 minutes, to prevent sending the same or very similar information about the whereabouts of the vehicle every time the application recognizes the plate. Furthermore, the plate's information will be bundled together with the current location of the smartphone, the current time and the confidence of the recognition. This bundled message will then be sent to a central server where it can then be distributed to the correct authorities. After this has been done or if there wasn't a match, the system starts again from the beginning.
 
 
 \begin{figure}[ht]
@@ -142,7 +142,7 @@ The first step to locating a license plate is to find its vertical location, whi
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.3\textwidth]{plaatjes/dutch-plate}
-    \caption{Dutch license plate. \cite{dutch-license-fig}}
+    \caption{Example of a Dutch license plate. \cite{dutch-license-fig}}
     \label{fig:dutch-plate}
 \end{figure}
 
@@ -283,13 +283,11 @@ The second part of this component is very simple. Once the text has been parsed,
 \hoofdstuk{Validation}
 % #####################################################################################################################################################################################
 
-To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which will in turn be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful. These test would be focused on three elements: the maximum distance and angle at which the application will give reliable results and how well does it perform while in a driving car.
+To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which in turn will be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful. These tests are focused on three elements: the maximum distance and angle at which the application is able to present reliable results and how well it performs while inside a driving car.
 
-\paragraaf{Distance}%
+\paragraaf{Distance}
 
-The validation based on the distance was tested on 4 different distances, 3, 4, 5 and 6 meters, while standing straight in front of the vehicle. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
-
-% \clearpage
+The validation phase where the distance limitations of the application are tested, perform these tests at 4 different distances while standing straight in front of the vehicle: 3, 4, 5, and 6 meters. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
 
 \begin{figure}[ht]
         \centering
@@ -324,19 +322,19 @@ The validation based on the distance was tested on 4 different distances, 3, 4, 
 
 \paragraaf{Angle}
 
-For the maximum angle test, angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47,5$^{\circ}$.
+For the maximum angle test, angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
 
 \begin{figure}[H]
         \centering
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-47,5a}
-            \caption{Vehicle at 4 meters, 47,5$^{\circ}$.}
+            \caption{Vehicle at 4 meters, 47$^{\circ}$.}
             \label{fig:4m-47.5a}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/test-4m-47,5a+}
-            \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
+            \caption{Vehicle at 4 meters, \textgreater 47$^{\circ}$.}
             \label{fig:4m-47.5a-more}
         \end{subfigure}%
         % ~ 
@@ -351,8 +349,9 @@ To find out how well the text recognition work, images from different scenarios 
 
 \paragraaf{Real scenario}
 
-Once the limitations of the application have been found, this data must be tested on a real scenario to see how well the application handles real usage. In Figure \ref{fig:real-scenario-1} the application is able to find the plate perfectly and parse the text almost correctly, because the vehicle is within the maximum distance and angle discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself. Possible solutions for the problems discovered in this chapter are discussed in the recommendations chapter.
-\begin{figure}[H]
+Once the limitations of the application have been found, this data must be tested on a real scenario to see how well the application handles real usage. In Figure \ref{fig:real-scenario-1} the application is able to find the plate perfectly and parse the text almost correctly, because the vehicle is within the maximum distance and angle discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself.
+
+\begin{figure}[ht]
         \centering
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/real-scenario-1}
