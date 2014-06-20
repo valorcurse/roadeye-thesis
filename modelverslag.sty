@@ -18,8 +18,8 @@
 
 \newcommand{\INS}{CMI}%
 
-\iflanguage{dutch}{\def\HR{Hogeschool Rotterdam}}{\def\HR{Rotterdam University}}%
-\iflanguage{dutch}{\def\TI{Technische Informatica}}{\def\TI{Technical Informatics}}%
+\iflanguage{dutch}{\def\HR{Hogeschool Rotterdam}}{\def\HR{Rotterdam University of Applied Sciences}}%
+\iflanguage{dutch}{\def\TI{Technische Informatica}}{\def\TI{Computer Science}}%
 \iflanguage{dutch}{\def\BI{Bedrijfskundige Informatica}}{\def\BI{Business Informatics}}%
 \iflanguage{dutch}{\def\INF{Informatica}}{\def\INF{Informatics}}%
 \iflanguage{dutch}{\def\van{van}}{\def\van{by}}
@@ -161,7 +161,7 @@
    \vspace{1.0cm}%
    \emph{#2} \\%
    \vspace{2.0cm}%
-   \includegraphics[width=2cm]{plaatjes/logohr.png} \\%
+   \iflanguage{dutch}{\includegraphics[width=2cm]{plaatjes/logohr.png}}{\includegraphics[width=2cm]{plaatjes/hro-english.jpg}} \\%
    \vspace{1.0cm}%
    {\small \INS{}-\opl{} \emph{#3} -- \HR} \\%
    \vspace{2.0cm}%
