@@ -347,32 +347,50 @@ To find what the maximum angle is at which the application still works reliably,
         \label{fig:angle-test}
 \end{figure}%
 
-\paragraaf{Text recognition}
+\paragraaf{Reliable area}
 
-To find out how well the text recognition works, images from different scenarios are used for the test. One of the problems that haunts text recognition are characters that are similar in shape and this application is no stranger to that kind of problem. Even though most similar characters have been removed from license plates, i.e. the `0' and the `O', there are still characters which look similar enough when the plate is far away or at a difficult angle and cause problems during the recognition. For example, in Figure \ref{fig:real-scenario-1} the character `S' is continuously recognised as the number `5' because of the shape similarity, or in Figures \ref{fig:6m-0a} and \ref{fig:4m-47.5a-more} the character `X' is recognised as a `Z' because of the difficult distance or angle of the image. 
+Using the information gathered using the past two tests, an area can be derived within which the application works well and reliably. This area is depicted in Figure \ref{fig:road-situation} and the scenario was created using the road design criteria from the province of Zuid-Holland \cite{road-design}. Looking at this figure it's clear that the application can process the plates of vehicles both in the same lane, at a distance of 5 meters, and in the adjacent lanes, at a distance of 4 meters, while driving at a safe distance on an inside road or during a slow commute on the highway. 
+
+
+%Further, the text recognition component does not work flawlessly because of the large number of possible combinations of angles, distances, light conditions, and obstructions that plates in captured images are subject to and in turn results in incorrect text parsing. However this isn't a large problem for the application because its purpose is to find a predefined set of license plates, which means the application only needs to parse the plate correctly once and therefore a large number of false positives has little impact in the reliability of the results.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.3\textwidth]{plaatjes/roadeye-road}
+    \caption{Application flow diagram.}
+    \label{fig:road-situation}
+\end{figure}%
+
+%\paragraaf{Text recognition}
+
+%To find out how well the text recognition works, images from different scenarios are used for the test. One of the problems that haunts text recognition are characters that are similar in shape and this application is no stranger to that kind of problem. Even though most similar characters have been removed from license plates, i.e. the `0' and the `O', there are still characters which look similar enough when the plate is far away or at a difficult angle and cause problems during the recognition. For example, in Figure \ref{fig:real-scenario-1} the character `S' is continuously recognised as the number `5' because of the shape similarity, or in Figures \ref{fig:6m-0a} and \ref{fig:4m-47.5a-more} the character `X' is recognised as a `Z' because of the difficult distance or angle of the image. 
 
 \paragraaf{Real scenario}
 
-Once the limitations of the application have been found, this data must be tested on a real scenario to see how well the application handles real usage. In Figure \ref{fig:real-scenario-1} the application is able to find the plate perfectly and parse the text almost correctly, because the vehicle is within the maximum distance and angle  area discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself.
+Once the distance and angle limitations of the application have been found, they must be tested on a real scenario to see how well the application handles real usage. This was tested while inside a car driving normally on an inside road. One of the situations encountered is displayed in Figure \ref{fig:real-scenario-1}. The vehicle in front of the camera is within the distance limit of 5 meters and the application is able to find the plate perfectly. But even though the plate is within the reliable detection area, the text is incorrectly parsed. The application ... the letter `S' for the number `5' or even the number `3'. This exposes a limitation that might impact the accuracy of the application. Visible on Figure \ref{fig:real-scenario-2} is another situation which the application isn't able to handle correctly. Even though the car in the lane left of the application is within the reliable detection area, the application is not able to find the location of the plate, let alone parse its text which in this case is not even visible. The last situation, depicted in Figure \ref{fig:real-scenario-3}, proves that if a car is indeed at a distance larger the calculated reliable distance, that the application is not able to find its location.
+
+
+
+%and parse the text almost correctly, because the vehicle is within the maximum distance and angle  area discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself.
 
 \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/real-scenario-1}
-            \caption{Vehicle at 4 meters, 47,5$^{\circ}$.}
+            \caption{Incorrectly parsed text.}
             \label{fig:real-scenario-1}
         \end{subfigure}%
         ~ 
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/real-scenario-2}
-            \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
+            \caption{Incoming car.}
             \label{fig:real-scenario-2}
         \end{subfigure}%
         % ~ 
 
         \begin{subfigure}{0.50\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/real-scenario-3}
-            \caption{Vehicle at 4 meters, \textgreater 47,5$^{\circ}$.}
+            \caption{Car at a great distance.}
             \label{fig:real-scenario-3}
         \end{subfigure}%
 
