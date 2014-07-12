@@ -57,7 +57,7 @@ Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past
 \hoofdstuk{Algorithms}
 % #####################################################################################################################################################################################
 
-When reasoning about what kind of main algorithms would be necessary to develop the application and after researching which software could be used to develop the application, the problem was then broken down into two different categories: localising the plate within an image, because it is a very specific problem which requires a specific algorithm to solve, and parsing the text within the plate, which is a broader case and there are available libraries which can be promptly used to solve this problem. After this realisation and researching the possibilities, the following choices were made.
+After reasoning about what kind of main algorithms and researching which software could be used to develop the application, the problem was then broken down into two different categories: localising the plate within an image, because it is a broad problem which can be solved in a different number of ways, and parsing the text within the plate, which is a more specific problem and there are available libraries which can be promptly used to solve this problem. After this realisation and researching the possibilities, the following choices were made:
 
 \paragraaf{Plate localization}
 
@@ -293,6 +293,12 @@ To define where the strengths and weaknesses of the software lie, some validatio
 
 The validation phase where the distance limitations of the application are tested, perform these tests at 4 different distances while standing straight in front of the vehicle: 3, 4, 5, and 6 meters. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
 
+\paragraaf{Angle}
+
+To find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
+
+\clearpage
+
 \begin{figure}[ht]
         \centering
         \begin{subfigure}{0.5\textwidth}
@@ -324,10 +330,6 @@ The validation phase where the distance limitations of the application are teste
         \label{fig:distance-test}
 \end{figure} %
 
-\paragraaf{Angle}
-
-To find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
-
 \begin{figure}[H]
         \centering
         \begin{subfigure}{0.50\textwidth}
@@ -347,31 +349,25 @@ To find what the maximum angle is at which the application still works reliably,
         \label{fig:angle-test}
 \end{figure}%
 
+\clearpage
+
 \paragraaf{Reliable area}
 
-Using the information gathered using the past two tests, an area can be derived within which the application works well and reliably. This area is depicted in Figure \ref{fig:road-situation} and the scenario was created using the road design criteria from the province of Zuid-Holland \cite{road-design}. Looking at this figure it's clear that the application can process the plates of vehicles both in the same lane, at a distance of 5 meters, and in the adjacent lanes, at a distance of 4 meters, while driving at a safe distance on an inside road or during a slow commute on the highway. 
+Using the information gathered using the past two tests, an area can be derived within which the application works well and reliably. This area is depicted in Figure \ref{fig:road-situation} and the scenario was created using the road design criteria from the province of Zuid-Holland \cite{road-design}. Looking at this figure it's clear that the application can process the plates of vehicles both in the same lane, at a distance of 5 meters, and in the adjacent lanes, at a distance of 4 meters, while driving at a safe distance on an inside road or during a slow commute on the highway.
 
-
-%Further, the text recognition component does not work flawlessly because of the large number of possible combinations of angles, distances, light conditions, and obstructions that plates in captured images are subject to and in turn results in incorrect text parsing. However this isn't a large problem for the application because its purpose is to find a predefined set of license plates, which means the application only needs to parse the plate correctly once and therefore a large number of false positives has little impact in the reliability of the results.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=0.3\textwidth]{plaatjes/roadeye-road}
-    \caption{Application flow diagram.}
+    \includegraphics[width=0.5\textwidth]{plaatjes/roadeye-road}
+    \caption{Reliable detection area.}
     \label{fig:road-situation}
 \end{figure}%
 
-%\paragraaf{Text recognition}
-
-%To find out how well the text recognition works, images from different scenarios are used for the test. One of the problems that haunts text recognition are characters that are similar in shape and this application is no stranger to that kind of problem. Even though most similar characters have been removed from license plates, i.e. the `0' and the `O', there are still characters which look similar enough when the plate is far away or at a difficult angle and cause problems during the recognition. For example, in Figure \ref{fig:real-scenario-1} the character `S' is continuously recognised as the number `5' because of the shape similarity, or in Figures \ref{fig:6m-0a} and \ref{fig:4m-47.5a-more} the character `X' is recognised as a `Z' because of the difficult distance or angle of the image. 
+\clearpage
 
 \paragraaf{Real scenario}
 
 Once the distance and angle limitations of the application have been found, they must be tested on a real scenario to see how well the application handles real usage. This was tested while inside a car driving normally on an inside road. One of the situations encountered is displayed in Figure \ref{fig:real-scenario-1}. The vehicle in front of the camera is within the distance limit of 5 meters and the application is able to find the plate perfectly. But even though the plate is within the reliable detection area, the text is incorrectly parsed. The application ... the letter `S' for the number `5' or even the number `3'. This exposes a limitation that might impact the accuracy of the application. Visible on Figure \ref{fig:real-scenario-2} is another situation which the application isn't able to handle correctly. Even though the car in the lane left of the application is within the reliable detection area, the application is not able to find the location of the plate, let alone parse its text which in this case is not even visible. The last situation, depicted in Figure \ref{fig:real-scenario-3}, proves that if a car is indeed at a distance larger the calculated reliable distance, that the application is not able to find its location.
-
-
-
-%and parse the text almost correctly, because the vehicle is within the maximum distance and angle  area discovered in the sections above. In Figures \ref{fig:real-scenario-2} and \ref{fig:real-scenario-3} the application is not able to find the plates and much less parse the text because the plates are too far and/or too blurred. These limitations are related to the frame rate and resolution at which the video is captured and are not a direct limitation of the application itself.
 
 \begin{figure}[ht]
         \centering
@@ -396,4 +392,58 @@ Once the distance and angle limitations of the application have been found, they
 
         \caption{Results at varied angles.}
         \label{fig:real-scenario}
+\end{figure}%
+
+\clearpage
+
+\paragraaf{Adjacent vehicles}
+
+One other possible problem of this application is attributed to the way its plate location software works. By only retrieving the largest `plate' on each band, it is possible that the application will miss a plate if the vertical locations of two car plates happen to overlap. To test this problem an image was created, displayed in Figure \ref{fig:same-height-source}, with two different cars next to each other with their license plates at around the same height. Further, another image was created, displayed in Figure \ref{fig:different-height-source}, with the same cars but then at different heights to test if both plates are located if the vertical locations of both plates do not overlap.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/85}
+    \caption{Reliable detection area.}
+    \label{fig:same-height-source}
+\end{figure}%
+
+Starting with the image with the overlapping plates, this image was processed using the application and the result is displayed in Figure \ref{fig:same-height-band}. Because the algorithm only looks for the largest group of peaks in each band, it also only finds one of the bands present in this band. In this case the right plate happens to be larger than its left counterpart and is therefore indeed the only one chosen. This reduces the amount of plates retrieved from camera images in these kind of scenarios.
+
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/85-graph}
+    \caption{Reliable detection area.}
+    \label{fig:same-height-band}
+\end{figure}%
+
+To test whether the application is able to find multiples plates within an image if those plates' vertical locations do not overlap, the second image was processed using the application.
+
+\clearpage 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/85-offset}
+    \caption{Reliable detection area.}
+    \label{fig:different-height-source}
+\end{figure}%
+
+Because the plates' vertical locations do not overlap, they end up in different bands. Both these bands are displayed in Figure \ref{fig:different-height-bands}. As it's possible to see in both displayed images, the application is undoubtedly able to locate both plates. This reduces the possible scenarios where the application will only find one of the multiple plates present to the scenarios where the plates are located in overlapping vertical locations.  
+
+\begin{figure}[ht]
+        \centering
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/85-offset-1}
+            \caption{Incorrectly parsed text.}
+            \label{fig:different-height-band-1}
+        \end{subfigure}%
+
+        \begin{subfigure}{\textwidth}
+            \includegraphics[width=\textwidth]{plaatjes/85-offset-2}
+            \caption{Incoming car.}
+            \label{fig:different-height-band-2}
+        \end{subfigure}%
+
+        \caption{Results at varied angles.}
+        \label{fig:different-height-bands}
 \end{figure}%
