@@ -4,7 +4,7 @@
 
 Even though a general goal and vision are important for guiding which direction the application goes towards, they must be broken down into smaller, more concrete and measurable objectives. These are called requirements and are used to determine the project’s progress and whether it was completed successfully or not. The following requirements were deduced from the project’s problem and objective:
 
-\begin{itemize}
+\begin{enumerate}
     \item{\textbf{The application must be able to locate the license plate within an image.} \\
         One of the most important functionalities of the application, without this requirement most of the following requirements can not be accomplished. Must find a plate within an image where a plate is present and ignore everything else if no license plate is present.        
     }
@@ -29,7 +29,7 @@ Even though a general goal and vision are important for guiding which direction 
         As to minimise the chance any privacy law will be broken, the application will not save any form of data which might be used to identify someone. The reason for this is explained in a later chapter.
     }
 
-\end{itemize}
+\end{enumerate}
 
 % #####################################################################################################################################################################################
 \hoofdstuk {Methodology}
@@ -110,13 +110,13 @@ The top-level flow of the system consists of three individual components: the we
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{plaatjes/top-down}
-    \caption{Top-level diagram.}
+    \caption{Context diagram.}
     \label{fig:top-level}
 \end{figure}%
 
-Although all those three components are part of the whole system, this project only focuses on the application itself. A flowchart illustrating the general design and flow of the application is displayed in Figure \ref{fig:architecture}. Within an Android application all components run in the same thread by default, which is also known as the `main thread', and is identified in the flowchart as `UI' because it is used mainly to regulate all the processes related to the user interface. One of those processes, and also one of the most fundamental running in this thread, is the process which captures images from the device's camera. The process captures image frames at a set rate in order to avoid the unnecessary capture of very similar images and, because image processing algorithms consist of a large number of calculations and therefore might take a long time to finish, to avoid overwhelming the application with too many frames. These images are then pushed into a buffer, called `Frames buffer', where they are kept until they are able to be processed. For the same reasons the camera only captures frames at a specific rate, this buffer has a limit of how many frames can be stored within but with the intention of only preserving images which are as recent as possible, before a new frame is added the oldest remaining frame in the buffer is removed. Further, the UI thread also manages the retrieval of the license plate information from the specified website. This process is repeated after a specified amount of time, the default being 30 minutes. This process runs until the application is terminated.
+Although all those three components are part of the whole system, this project only focuses on the application itself. A flowchart illustrating the general design and flow of the application is displayed in Figure \ref{fig:architecture}. Within an Android application all components run in the same thread by default, which is also known as the `main thread', and is identified in the flowchart as `UI' because it is used mainly to regulate all the processes related to the user interface. One of those processes, and also one of the most fundamental running in this thread, is the process which captures images from the device's camera. The process captures image frames at a set rate, the default being 1 second, in order to avoid the unnecessary capture of very similar images and, because image processing algorithms consist of a large number of calculations and therefore might take a long time to finish, to avoid overwhelming the application with too many frames. These images are then pushed into a buffer, called `Frames buffer', where they are kept until they are able to be processed. For the same reasons the camera only captures frames at a specific rate this buffer has a limit of how many frames can be stored within with also the intention of only preserving images which are as recent as possible. Before a new frame is added the remaining frame must be processed. Further, the UI thread also manages the retrieval of the license plate information from the specified website. This process is repeated after a specified amount of time, the default being 30 minutes. This process runs until the application is terminated.
 
-As explained before, image processing is rather heavy and it is necessary to use every tool available to increase the application's performance. One of these tools is multi-threading and apart from the UI thread this application uses two other kinds of threads, up to a total of four threads which is also the number of physical cores in the used device and therefore gives every thread a dedicated core. The processes called `Find bands' and `Find plate' use a type of thread called a \emph{One-Call Thread}, which are threads used for a short period of time and only run when called. The other kind of thread is called a \emph{Permanent thread}. This type of thread is started during the initiation of the application, runs parallel to the UI thread and lives as long as the application itself. This process is responsible for checking whether the bands and plates buffers have available items and for calling the respective processes to process them. Further, if a plate is found then this thread applies text recognition to retrieve the displayed text and tries to match it with the database entries. If there is a match, the application will save the plate information for a defined amount of time, the default being 30 minutes, to prevent sending the same or very similar information about the whereabouts of the vehicle every time the application recognises the plate. Furthermore, the plate's information will be bundled together with the current location of the smartphone, the current time and the confidence of the recognition. This bundled message will then be sent to a central server where it can then be distributed to the correct authorities. After this has been done or if there wasn't a match, the system starts again from the beginning.
+As explained before, image processing is rather heavy and it is necessary to use every tool available to increase the application's performance. One of these tools is multi-threading and apart from the UI thread this application uses two other kinds of threads, up to a total of four threads which is also the number of physical cores in the used device and therefore gives every thread a dedicated core. The processes called `Find bands' and `Find plate', which are the processes that find the vertical and horizontal location of the plate respectively and are discussed in the Implementation chapter, use a type of thread called a \emph{One-Call Thread}, which are threads used for a short period of time and only run when called. The other kind of thread is called a \emph{Permanent thread}. This type of thread is started during the initiation of the application, runs parallel to the UI thread and lives as long as the application itself. This process is responsible for checking whether the bands and plates buffers have available items and for calling the respective processes to process them. Further, if a plate is found then this thread applies text recognition to retrieve the displayed text and tries to match it with the database entries. If there is a match the application will save the plate information for a defined amount of time, the default being 30 minutes, to prevent that in case the application recognizes the same plate multiples times, it will not send the same or very similar information about the whereabouts of the vehicle and therefore spamming the central application. Furthermore, the plate's information will be bundled together with the current location of the smartphone, the current time and the confidence of the recognition. This bundled message will then be sent to a central server where it can then be distributed to the correct authorities. After this has been done or if there wasn't a match, the system starts again from the beginning.
 
 
 \begin{figure}[ht]
@@ -162,23 +162,30 @@ Colour segmentation consists of fetching only the areas of an image which fall w
 
 As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. Often the segmented image also contains speckles from various small objects present in the image. These speckles are also visible in the previously mentioned image and might cause incorrect results when trying to locate the plate. To prevent this, a morphological closing operation \cite{morphclose} is performed. This operation works by dilating the image, which actually dilates its background and therefore removes small objects but also reduces the area of the plate, followed by eroding the dilated image, which does the inverse of the previous operation and returns the plate to its original size while the small objects are still gone. Further, because there are such things as yellow cars and other yellow objects, an extra step must be taken to decrease the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel operator \cite{sobel} was used and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone.
 
-Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly which is necessary for a later stage. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. The results in the `smooth' graph displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
+Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly, which is necessary for the next step of finding peaks. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. In Figure \ref{fig:mean-filter} an example is displayed which illustrates the effect of a mean-filter. The results in the `smooth' graph of the sum of the intensity of every pixel on each row, displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The previous mean-filter is used to prevent the graph from suddenly dropping bellow this 10\% in case there happen to be no pixels in that specific row. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=\textwidth]{plaatjes/mean-filter}
+    \caption{Example of mean-filter.}
+    \label{fig:mean-filter}
+\end{figure}
 
 \begin{figure}[ht]
         \centering
-        \begin{subfigure}{0.33\textwidth}
+        \begin{subfigure}{0.7\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/yellow-segment}
             \caption{Colour segmentation.}
             \label{fig:color-segmented}
         \end{subfigure}%
-        ~ 
-        \begin{subfigure}{0.33\textwidth}
+        
+        \begin{subfigure}{0.7\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/edge-detection}
             \caption{Edge detection.}
             \label{fig:edge-detected}
         \end{subfigure}%
 
-        \begin{subfigure}{0.5\textwidth}
+        \begin{subfigure}{0.7\textwidth}
             \includegraphics[width=\textwidth]{plaatjes/3-peaks}
             \caption{Possible band(s).}
             \label{fig:possible-bands}
@@ -187,6 +194,8 @@ Once that is done, the application can start analysing the previous image for th
         \caption{Phases from band localization.}
         \label{fig:find-band}
 \end{figure}
+
+\clearpage
 
 \paragraaf{Plates}
 
