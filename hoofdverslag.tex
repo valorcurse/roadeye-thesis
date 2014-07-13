@@ -162,13 +162,20 @@ Colour segmentation consists of fetching only the areas of an image which fall w
 
 As a result of segmenting the yellow colour from the source image, the image in Figure \ref{fig:color-segmented} is created, where the plate's location is quite visible. Often the segmented image also contains speckles from various small objects present in the image. These speckles are also visible in the previously mentioned image and might cause incorrect results when trying to locate the plate. To prevent this, a morphological closing operation \cite{morphclose} is performed. This operation works by dilating the image, which actually dilates its background and therefore removes small objects but also reduces the area of the plate, followed by eroding the dilated image, which does the inverse of the previous operation and returns the plate to its original size while the small objects are still gone. Further, because there are such things as yellow cars and other yellow objects, an extra step must be taken to decrease the chance of finding random objects. This is accomplished by making use of a characteristic of text and by extension of license plates, which is a high number of edges. By applying an edge detection algorithm, in this case the Sobel operator \cite{sobel} was used and its output is visible in Figure \ref{fig:edge-detected}, we still get a visible area where the plate is located but in case the source image contained large yellow areas, these areas are now mostly gone.
 
-Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly, which is necessary for the next step of finding peaks. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. In Figure \ref{fig:mean-filter} an example is displayed which illustrates the effect of a mean-filter. The results in the `smooth' graph of the sum of the intensity of every pixel on each row, displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The previous mean-filter is used to prevent the graph from suddenly dropping bellow this 10\% in case there happen to be no pixels in that specific row. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. 
+Once that is done, the application can start analysing the previous image for the license plate's possible location. This is done by summing up the intensity of every pixel on each row and therefore creating a graph where the density of edges on each row is displayed. Before making any decisions concerning the plate's location on the graph, a filter must be applied to the data to remove unwanted data and increase the desired area slightly, which is necessary for the next step of finding peaks. This filter is called a \emph{mean-filter} and works by summing up the values of a specific number of the previous and next data values, in the case of this application seven values are used, with the current value and diving it by the total number of values. In Figure \ref{fig:mean-filter} an example is displayed which illustrates the effect of a mean-filter. The results in the `smooth' graph of the sum of the intensity of every pixel on each row, displayed in Figure \ref{fig:possible-bands}. The next step and last step is finding the potential plate areas and this is done by searching for a number of the highest peaks in the graph, with three being the default. The algorithm tries to find multiple possible locations in case an object in the image happens to have a higher edge density than the plate, and therefore increasing the chance of still finding it. The way the application finds peaks is by finding the highest value in the data set and then searching for the right and left boundary of the peak by iterating towards its respective side until it finds a value which is equal to or smaller than 10\% of the peak's value. The previous mean-filter is used to prevent the graph from suddenly dropping bellow this 10\% in case there happen to be no pixels in that specific row. The coordinates of both boundaries are then saved and the area in between both coordinates is made equal to zero, or \emph{zeroised}. By rinsing and repeating this process for the chosen number of times, the bands displayed on Figure \ref{fig:possible-bands} are found. The flow of this process is illustrated in Figure \ref{fig:find-band-flow}.
 
 \begin{figure}[ht]
     \centering
     \includegraphics[width=\textwidth]{plaatjes/mean-filter}
     \caption{Example of mean-filter.}
     \label{fig:mean-filter}
+\end{figure}
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plaatjes/find-band-flow}
+    \caption{Flow of band location.}
+    \label{fig:find-band-flow}
 \end{figure}
 
 \begin{figure}[ht]
@@ -247,7 +254,16 @@ Finally, only a few last steps are necessary to complete the localisation and pr
         \label{fig:deskewing-plate}
 \end{figure}
 
-After this whole process, the plate is now ready to have the OCR software applied to it.
+After this whole process, the plate is now ready to have the OCR software applied to it. The flow of this process is illustrated in Figure \ref{fig:find-plate-flow}.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plaatjes/find-plate-flow}
+    \caption{Flow of plate location.}
+    \label{fig:find-plate-flow}
+\end{figure}%
+
+\clearpage
 
 \paragraaf{Text recognition}
 
