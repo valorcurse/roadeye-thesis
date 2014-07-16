@@ -44,14 +44,31 @@ This method is applied for searching for potential algorithms which can be used 
 
 \paragraaf{Development method}
 
-This project will be developed using the \emph{Iterative Application Development} (IAD) method. This development method works by dividing the project into smaller `sub-projects', called \emph{cycles}, and incrementing them to past cycles, which will ultimately lead to a complete system. Each cycle consists of three phases, which can be repeated multiple times if necessary, called \emph{iterations}. These iterations are: \emph{definition}, \emph{development} and \emph{deployment}.
+After searching for and finding which development methods are used for developing software within the company, which are the waterfall method and the Scrum method, some time was spent researching which method was the most appropriate for this project. The waterfall method consists of a sequential design process of multiple phases. The flow of this method is illustrated in Figure \ref{fig:waterfall-method}. When using this method, the whole design process must be done during their own phases and cannot be interchanged. This presented a problem because of the lack of knowledge on the computer vision subject and on the development of Android applications, which made it difficult to foresee what kind difficulties might arise during the development. Because of this reason, this method was deemed too inflexible for this project.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.6\textwidth]{plaatjes/waterfall-method}
+    \caption{The waterfall method.}
+    \label{fig:waterfall-method}
+\end{figure}%
+
+The other method used within the company was Scrum. It works by dividing a project into smaller windows, called sprints, in which a feature is developed. At the end of each cycle its result is reviewed together with the customer to determine if the project is going in the desired direction. This method differs from the waterfall method because it focusses more on feedback than on previous planning. Using this method it's possible to tackle problems which were not possible to solve in a planned and predictive way. Such a method conforms better to the necessities of being able to revise the design and implementation of the project due to, for example, the lack of knowledge previously mentioned. But Scrum is intended to be used when developing software with a group. There is even a role within the group that is purely intended to make sure the rest of the group can do their work without any interruption, called the Scrum Master. Because this project was developed by one person, a similar development method had to be found which had all the benefits of Scrum but made solo development possible.
+
+\begin{figure}[ht]
+    \centering
+    \includegraphics[width=0.8\textwidth]{plaatjes/scrum-method}
+    \caption{The Scrum method.}
+    \label{fig:waterfall-method}
+\end{figure}%
+
+
+That method turned out to be the \emph{Iterative Application Development} (IAD) method. This development method works by dividing the project into smaller `sub-projects', called \emph{cycles}, and incrementing them to past cycles, which will ultimately lead to a complete system. Each cycle consists of three phases, which can be repeated multiple times if necessary, called \emph{iterations}. These iterations are: \emph{definition}, \emph{development} and \emph{deployment}.
 
 During the definition phase the goals, limitations and conditions for the current cycle are examined and described. If a previous cycle has been completed, it will be evaluated during this phase. This phase is intended for thinking towards the completion of the project and to achieve a more clear picture of the system as a whole.
-After defining the objective for the new cycle, the software will be developed. After finishing, the software is then integrated with the software developed in the previous cycles and becomes therefore part of the general project.
+After defining the objective for the new cycle, the software will be developed. After finishing, the software is then integrated with the software developed in the previous cycles and becomes therefore part of the general project. This method of software development brings multiple benefits: The complexity of the project is decreased by breaking down the problem into smaller chunks, which allows for faster and more concrete results and makes it therefore easier to get better feedback or to solve critical bottlenecks by being able to discuss them at the end of each cycle. The project development also becomes more flexible by having the possibility to review the requirements and strategies every cycle. Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
 
-This method of software development brings multiple benefits: The complexity of the project is decreased by breaking down the problem into smaller chunks, which allows for faster and more concrete results and makes it therefore easier to get better feedback or to solve critical bottlenecks by being able to discuss them at the end of each cycle. The project development also becomes more flexible by having the possibility to review the requirements and strategies every cycle.
-
-Each cycle lasts 2 weeks and at the end of each cycle the evaluation of the past cycle and the objective for the coming cycle will be discussed with the organisation's mentor.
+Using this method it's possible to make up for the lack of knowledge on the by doing the research and implementation incrementally and dealing with problems whenever they arise instead of trying to predict beforehand what could go wrong during the development.
 
 % #####################################################################################################################################################################################
 \hoofdstuk{Algorithms}
