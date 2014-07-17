@@ -344,9 +344,11 @@ During this validation phase the distance limitations of the application are tes
 	\item 6 meters: $58x12$ pixels
 \end{itemize}
 
+This means that at a distance of 3 meters, the application should be able to read the text effortlessly. But the further away the vehicle gets to the height boundary of 10 pixels, the fewer correct results can be retrieved. At the distances of 4 and 5 meters, it should still be able to read the text but at a distance of 6 meters, the height of the characters might be to small to read correctly.
+
 The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. This conforms largely with the heights provided by the Tesseract's FAQ, although the text doesn't have to get to a height of 10 pixels or fewer before not being able to get reasonable results. The font used in plates might be to blame for these discrepancies.
 
-\clearpage
+% \clearpage
 
 \begin{figure}[ht]
         \centering
