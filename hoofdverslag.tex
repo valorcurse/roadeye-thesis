@@ -40,7 +40,9 @@ Before starting the development, the methods must be found which will be used to
 \paragraaf{Research method}
 
 The method applied for researching the problems of this project and its possible solutions is called \emph{literature review}. This method consists of researching what has already been published, which might be in the form of scientific or engineering papers, journals, thesis, etc., by accredited scientists, scholars or engineers concerning this assignment's topics. 
-This method is applied for searching for potential algorithms which can be used to solve the problems created by the requirements. Once a group of the most suitable algorithms has been found, the best one must be chosen and the reasoning for this choice must be explained. When the choice has been made, the algorithm is then implemented using the chosen development method.
+This method is used for searching for potential algorithms which can be used to solve the problems created by the requirements. Once a group of the most suitable algorithms has been found, the best one must be chosen and the reasoning for this choice must be explained. When the choice has been made, the algorithm is then implemented using the chosen development method.
+
+This method was chosen because computer vision is a rather complex field of study and to be able to understand and apply it correctly, learning about the past work of like-minded researchers is a must. This project's research was done by searching for available papers on the internet. Starting with very general terms related to the topic of license plate location, the research became more and more refined by searching for papers and terms referred on each related document found. This way a large quantity of topics were researched which might have been valuable for the project. Eventually suitable algorithms were found when researching using this method.
 
 \paragraaf{Development method}
 
@@ -329,15 +331,20 @@ The second part of this component is very simple. Once the text has been parsed,
 \hoofdstuk{Validation}
 % #####################################################################################################################################################################################
 
-To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which in turn will be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful. These tests are focused on three elements: the maximum distance and angle at which the application is able to present reliable results and how well it performs while inside a driving car.
+To define where the strengths and weaknesses of the software lie, some validation tests must be performed. These tests will provide information which in turn will be used to answer the research questions stated at the beginning of this thesis and, by extension, draw a conclusion on whether the project was successful. These tests are focused on three elements: the maximum distance and angle at which the application is able to present reliable results and how well it performs while inside a driving car. These tests were performed using a resolution of 1360x720 pixels, the highest possible for video on the chosen smartphone.
 
 \paragraaf{Distance}
 
-The validation phase where the distance limitations of the application are tested, perform these tests at 4 different distances while standing straight in front of the vehicle: 3, 4, 5, and 6 meters. The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. %
+During this validation phase the distance limitations of the application are tested. According to the FAQ of the Tesseract library \cite{tesseract-faq}, a minimum text size for reasonable accuracy is advised. It states that to get reasonable results each character must have at least a height of about 20 pixels, that below an height of 10 pixels there's a very little chance of accurate results, and below 8 pixels the characters will possibly be ignored as just image noise. These heights might differ with the use of different fonts. At a resolution of $1360x720$ pixels a plate of $52x11$ cm has the following dimensions in pixels at different distances:
 
-\paragraaf{Angle}
+\begin{itemize}
+	\item 3 meters: $118x24$ pixels
+	\item 4 meters: $87x17$ pixels
+	\item 5 meters: $72x14$ pixels
+	\item 6 meters: $58x12$ pixels
+\end{itemize}
 
-To find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
+The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:3m-0a}, the text recognised is rather sharp and the OCR software has absolutely no problem parsing it. But the further away we go, the less and less sharp the text gets. Figures \ref{fig:4m-0a} and \ref{fig:5m-0a} still look clear and are parsed well, but once we get to the around 6 meters of Figure \ref{fig:6m-0a} the parsed text starts getting some inconsistencies. Although it might still be possible the application will parse the text correctly, more often than not it will return incorrect results. The maximum reliable distance lies therefore between 5 and 6 meters. This conforms largely with the heights provided by the Tesseract's FAQ, although the text doesn't have to get to a height of 10 pixels or fewer before not being able to get reasonable results. The font used in plates might be to blame for these discrepancies.
 
 \clearpage
 
@@ -372,6 +379,12 @@ To find what the maximum angle is at which the application still works reliably,
         \label{fig:distance-test}
 \end{figure} %
 
+\paragraaf{Angle}
+
+To find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
+
+\clearpage
+
 \begin{figure}[H]
         \centering
         \begin{subfigure}{0.50\textwidth}
@@ -391,7 +404,7 @@ To find what the maximum angle is at which the application still works reliably,
         \label{fig:angle-test}
 \end{figure}%
 
-\clearpage
+% \clearpage
 
 \paragraaf{Reliable area}
 
