@@ -26,7 +26,6 @@ public class ExtendedVideoView extends VideoView {
 
     @Override
     public void draw(Canvas canvas) {
-//        canvas.setBitmap(mFrameBitmap);
         super.draw(canvas);
     }
 }

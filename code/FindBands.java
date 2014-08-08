@@ -46,12 +46,6 @@ class FindBands implements Runnable {
         // Yellow Hue -> 20 - 30
         Core.inRange(hsvImage, new Scalar(20, 100, 100), new Scalar(30, 255, 255), maskImage);
 
-        // Erode mask to remove noise
-        int erosionSize = 1;
-//        Mat kernel = Imgproc.getStructuringElement(Imgproc.MORPH_CROSS, new Size(2 * erosionSize + 1, 2 * erosionSize + 1),
-//                new Point(erosionSize, erosionSize));
-//        Imgproc.erode(maskImage, maskImage, kernel);
-
         // Calculate vertical edges
         Mat verticalEdges = new Mat();
         Imgproc.Sobel(maskImage, verticalEdges, maskImage.depth(), 1, 0, 3, 1, 0, Imgproc.BORDER_DEFAULT);
@@ -91,7 +85,6 @@ class FindBands implements Runnable {
 
         averageFilter(rowIntensity, (int) averageBand);
 
-//            float clippingConstant = 0.20f;
         ArrayList<Integer[]> clippingIndexes = new ArrayList<Integer[]>();
         for (int j = 0; j < nrOfBands; j++) {
 
@@ -129,9 +122,6 @@ class FindBands implements Runnable {
 
             clippingIndexes.add(new Integer[]{leftIndex, rightIndex});
 
-//                        new Point(verticalHistogram.width(), clipIndex[1] + heightOffset),
-//                        new Scalar(255, 0, 0));
-//            }
         }
 
         return clippingIndexes;

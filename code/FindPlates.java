@@ -1,7 +1,5 @@
 package com.cgi.roadeye.android;
 
-import android.util.Log;
-
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
@@ -50,7 +48,8 @@ class FindPlates implements Runnable {
 
         // If plate doesn't meet the correct size ratio
         if (3 <= ratio && ratio <= 6) return;
-            // If it's outside the source image
+
+        // If it's outside the source image
         else if (!Utilities.isInsideImage(tl, br, sourcePlate.getSourceImage())) return;
         else if (plateLocation[1] - plateLocation[0] > 0) {
 
@@ -98,7 +97,6 @@ class FindPlates implements Runnable {
 
                 sortContours(characterContours);
 
-                Log.i("FindPlate", "CharacterContours size: " + characterContours.size());
 
                 ArrayList<Mat> letters = new ArrayList<Mat>();
 
@@ -108,46 +106,20 @@ class FindPlates implements Runnable {
                     Mat letter = new Mat(binaryWarped.size(), CvType.CV_8U, new Scalar(0));
                     Imgproc.drawContours(letter, characterContours, i, new Scalar(255), Core.FILLED);
 
-                    double orientationAngle = getOrientation(characterContours.get(i));
-                    orientationAngle = Utilities.round(orientationAngle, 2);
-
-                    Log.i("FindPlates", "angle to slant : " + orientationAngle);
-
-                    orientationAngle = -(1.57 - orientationAngle);
-
-                    Log.i("FindPlates", "angle to slant 2: " + orientationAngle);
-//                    orientationAngle = 1.0;
-
-                    Mat rotatedLetter = new Mat();
-                    if (Math.abs(orientationAngle) < 0.5) {
-                        Mat transformationMatrix = new Mat(2, 3, CvType.CV_32F);
-                        transformationMatrix.put(0, 0, 1);                    // x-scale
-                        transformationMatrix.put(0, 1, orientationAngle);    // shear
-                        transformationMatrix.put(0, 2, 0);                    // x-translation
-                        transformationMatrix.put(1, 0, 0);                    // rotation
-                        transformationMatrix.put(1, 1, 1);                    // y-scale
-                        transformationMatrix.put(1, 2, 0);                    // y-translation
-
-                        Imgproc.warpAffine(letter, rotatedLetter, transformationMatrix, letter.size(), Imgproc.INTER_CUBIC);
-                    } else {
-                        rotatedLetter = letter;
-                    }
-
                     // Create list of points
-                    MatOfPoint pointsMat = Utilities.matToPoints(rotatedLetter);
+                    MatOfPoint pointsMat = Utilities.matToPoints(letter);
 
                     if (pointsMat.size().area() == 0) continue;
 
                     Rect rotatedBoundingRect = Imgproc.boundingRect(pointsMat);
-                    rotatedLetter = new Mat(rotatedLetter, rotatedBoundingRect);
+                    letter = new Mat(letter, rotatedBoundingRect);
 
-//                    letters.add(rotatedLetter);
-                    int deltaHeight = text.rows() - rotatedLetter.rows();
+                    int deltaHeight = text.rows() - letter.rows();
                     int top = deltaHeight / 2;
                     int bottom = deltaHeight - top;
 
                     Mat extendedRotated = new Mat();
-                    Imgproc.copyMakeBorder(rotatedLetter, extendedRotated, top, bottom, 0, 20, Imgproc.BORDER_CONSTANT);
+                    Imgproc.copyMakeBorder(letter, extendedRotated, top, bottom, 0, 20, Imgproc.BORDER_CONSTANT);
 
                     Mat concatText = new Mat(text.rows(), text.cols() + extendedRotated.cols(), CvType.CV_8U, new Scalar(0));
 
@@ -164,13 +136,7 @@ class FindPlates implements Runnable {
                     text = concatText;
                 }
 
-//                Mat textClone = new Mat(text.size(), CvType.CV_8U, new Scalar(0));
-//                for (int i = 0; i < characterContours.size(); i++) {
-//                    Imgproc.drawContours(textClone, characterContours, i, new Scalar(255), Core.FILLED);
-//                }
-
                 sourcePlate.setLetters(letters);
-//                text.push_back(textClone);
                 sourcePlate.setPlateImage(text);
             }
 
@@ -178,32 +144,6 @@ class FindPlates implements Runnable {
             platesBuffer.add(sourcePlate);
         }
 
-    }
-
-    double getOrientation(MatOfPoint points) {
-
-        //Construct a buffer used by the pca analysis
-        int pointsSize = (int) (points.size().height * points.size().width);
-        Mat dataPoints = new Mat(pointsSize, 2, CvType.CV_64FC1);
-        for (int i = 0; i < dataPoints.rows(); i += 2) {
-            double[] values = points.get(i, 0);
-
-            dataPoints.put(i, 0, values[0]);
-            dataPoints.put(i, 1, values[1]);
-        }
-
-        Mat mean = new Mat();
-        Mat eigenVectors = new Mat();
-        Core.PCACompute(dataPoints, mean, eigenVectors);
-
-        Log.i("FindPlates", "angle1: " + (Math.atan2(eigenVectors.get(0, 0)[0], eigenVectors.get(0, 1)[0])));
-        if (eigenVectors.get(0, 0).length > 1)
-            Log.i("FindPlates", "angle2: " + (Math.atan2(eigenVectors.get(0, 0)[1], eigenVectors.get(0, 1)[1])));
-
-        double result = Math.atan2(eigenVectors.get(0, 0)[0], eigenVectors.get(0, 1)[0]);
-
-        if (result != result) return 1.57;
-        else return result;
     }
 
     private Integer[] findPlates(Mat sourceImage) {

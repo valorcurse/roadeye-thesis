@@ -39,7 +39,6 @@ public class Utilities {
         }
 
         Mat histogram = new Mat(height, width, CvType.CV_8UC3, new Scalar(0, 0, 0));
-//        Mat histogram = new Mat();
 
         // Draw histogram
         for (int i = 0; i < list.size(); i++) {
@@ -80,8 +79,6 @@ public class Utilities {
     }
 
     public static boolean isInsideImage(Point tl, Point br, Mat image) {
-//        MatOfPoint points = matToPoints(image);
-//        Rect boundingBox = Imgproc.boundingRect(points);
 
         if (tl.x > 0 && tl.y > 0 &&
                 br.x < image.size().width && br.y < image.size().height) {

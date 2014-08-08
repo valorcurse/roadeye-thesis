@@ -51,7 +51,7 @@ After searching for and finding which development methods are used for developin
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.6\textwidth]{plaatjes/waterfall-method}
-    \caption{The waterfall method.}
+    \caption{The waterfall method \cite{waterfall-image}.}
     \label{fig:waterfall-method}
 \end{figure}%
 
@@ -60,7 +60,7 @@ The other method used within the company was Scrum, which is illustrated in Figu
 \begin{figure}[ht]
     \centering
     \includegraphics[width=0.8\textwidth]{plaatjes/scrum-method}
-    \caption{The Scrum method.}
+    \caption{The Scrum method \cite{scrum-image}.}
     \label{fig:scrum-method}
 \end{figure}%
 
@@ -383,7 +383,7 @@ The results are displayed in Figure \ref{fig:distance-test}. On Figure \ref{fig:
 
 \paragraaf{Angle}
 
-To find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
+This test is meant to find the maximum angle at which the application is still able to recognise the text. There is no information regarding which properties of the text would prevent the recognition of the text at a distant angle or what the maximum angle is for other projects. From all the information found about how Tesseract was applied in other projects, it only appears to be used to parse the text from scanned documents. No projects were found where Tesseract was used to recognise text at a large distance or at odd angles and it's therefore very difficult to predict how well the application will do at different angles. Although it is possible that the angle at which a character can still be recognised is dependant on its width, just like the recognition distance depended on a character's height, but this information is not enough to be able to do any predictions. Therefore to find what the maximum angle is at which the application still works reliably, various angles were tested in an incremental way. Starting at the 6 meter 0$^{\circ}$ mark, because 6 meters was the last position the application worked at this angle, a small step was continuously taken in a circle around the vehicle and the application was tested. If no angle worked at this distance, the same was then repeated at a closer distance. By repeating this process, the boundary of the reliable working area was found. As shown in Figure \ref{fig:4m-47.5a}, the application was able to parse the text correctly, but in Figure \ref{fig:4m-47.5a-more} which is only a step further to the right, the application didn't work correctly. This point was located at a distance of 4 meters from the car and at an angle around 47$^{\circ}$.
 
 \clearpage
 
@@ -534,6 +534,6 @@ There are multiple companies which create consumer versions of ANPR cameras. The
 
 Some research was also done over existing Android applications on the Play Store which might have the similar functionality. Few applications did license plate recognition and the ones that did did not work.
 
-\paragraaf{Conclusion}
+\paragraaf{Findings}
 
 When comparing all these features of the consumer cameras to this application, its role becomes more apparent. It's an ANPR system which has a wide angle view, only works at a small distance and at a low speed, which means the application has to be used while inside a vehicle driving closely to other vehicles during the day. Even though its specifications are not very impressive, it still is possible to find scenarios where this application would fulfill a purpose for which there is no other similar product. Because there are large areas with little surveillance in the rural areas and less larger cities, one of the possible scenarios would then be to improve the surveillance in these areas. This could be done by people on their morning and afternoon commute from and to their work. This way they could scan parked cars and slowly driving cars in urban areas.

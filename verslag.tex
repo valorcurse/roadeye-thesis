@@ -88,7 +88,12 @@
   tabsize=3
 }
 
-\newcommand{\includecode}[4]{\lstinputlisting[language=Java, caption={#2}, label={#3}, caption={#4}]{#1}}
+\newcommand{\includecode}[4]{
+  \lstinputlisting[language=Java, caption={#2}, label={#3}, 
+  caption={
+    \emph{#2} \\ #4
+  }]{#1}
+}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%% einde van de preambule, begin document %%%%%%%%%%%%%%%%%%%%

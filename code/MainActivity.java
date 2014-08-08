@@ -24,12 +24,17 @@ import org.opencv.android.OpenCVLoader;
 import org.opencv.android.Utils;
 import org.opencv.core.Mat;
 
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Vector;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.RejectedExecutionHandler;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
@@ -39,29 +44,20 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             .getExternalStorageDirectory().toString() + "/RoadEye/";
 
     public static final String lang = "plate";
-    private static final String TAG = "RoadEye: ";
+
+    private static int NUMBER_OF_CORES =
+            Runtime.getRuntime().availableProcessors();
 
     protected GridView platesGridView;
     protected VideoView videoView;
     protected Switch cameraVideoSwitch;
-
-    private OpenCVCamera mOpenCvCameraView;
-    private ArrayList<Mat> framesBuffer = new ArrayList<Mat>();
-    private Vector<Plate> bandsBuffer = new Vector<Plate>();
-    private ArrayList<Plate> gridPlatesBuffer = new ArrayList<Plate>();
-    private Vector<Plate> platesBuffer = new Vector<Plate>();
-    private ImageAdapter adapter;
-
 
     TessBaseAPI baseApi;
 
     double averageBand = 7;
     double clippingConstant = 0.1;
 
-    private static int NUMBER_OF_CORES =
-            Runtime.getRuntime().availableProcessors();
-
-    // Band queue
+    // Band threads queue
     ArrayBlockingQueue<Runnable> bandQueue = new ArrayBlockingQueue<Runnable>(1);
     RejectedExecutionHandler rejectedExecutionHandler = new ThreadPoolExecutor.DiscardPolicy();
     ExecutorService bandThreadsExecutor = new ThreadPoolExecutor(
@@ -72,7 +68,7 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
             bandQueue,
             rejectedExecutionHandler);
 
-    // Plate queue
+    // Plate threads queue
     LinkedBlockingQueue<Runnable> plateQueue = new LinkedBlockingQueue<Runnable>();
     ExecutorService plateThreadsExecutor = new ThreadPoolExecutor(
             NUMBER_OF_CORES / 2,
@@ -83,9 +79,41 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 
     boolean running = true;
     boolean useCamera = true;
-    String videoName = "VIDEO0003.mp4";
 
     MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+    private OpenCVCamera mOpenCvCameraView;
+    private ArrayList<Mat> framesBuffer = new ArrayList<Mat>();
+    private Vector<Plate> bandsBuffer = new Vector<Plate>();
+    private Vector<Plate> platesBuffer = new Vector<Plate>();
+    private Vector<String> platesInformation = new Vector<String>();
+
+    private BaseLoaderCallback mOpenCVCallBack = new BaseLoaderCallback(this) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS: {
+
+                    mOpenCvCameraView.enableView();
+
+                    ScheduledThreadPoolExecutor exec = new ScheduledThreadPoolExecutor(1);
+                    long period = 10; // the period between successive executions in seconds
+                    exec.scheduleAtFixedRate(new RetrievePlatesTask(platesInformation), 0, period, TimeUnit.SECONDS);
+
+
+                    initRecognitionThread();
+
+                }
+                break;
+
+                default: {
+                    super.onManagerConnected(status);
+                }
+                break;
+            }
+        }
+    };
+    private ArrayList<Plate> gridPlatesBuffer = new ArrayList<Plate>();
+    private ImageAdapter adapter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -112,11 +140,11 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 
         videoView = (VideoView) findViewById(R.id.videoView);
 
-        videoView.setVideoURI(Uri.parse(DATA_PATH + videoName));
+        videoView.setVideoURI(Uri.parse(DATA_PATH + "VIDEO0014.mp4"));
         MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
         videoView.setMediaController(mediaController);
-        mediaMetadataRetriever.setDataSource(DATA_PATH + videoName);
+        mediaMetadataRetriever.setDataSource(DATA_PATH + "VIDEO0014.mp4");
 
         mOpenCvCameraView = (OpenCVCamera) findViewById(R.id.OpenCvView);
         mOpenCvCameraView.setCvCameraViewListener(this);
@@ -132,27 +160,6 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
         baseApi.setPageSegMode(TessBaseAPI.PageSegMode.PSM_SINGLE_LINE);
 
     }
-
-    private BaseLoaderCallback mOpenCVCallBack = new BaseLoaderCallback(this) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS: {
-
-                    mOpenCvCameraView.enableView();
-
-                    initRecognitionThread();
-
-                }
-                break;
-
-                default: {
-                    super.onManagerConnected(status);
-                }
-                break;
-            }
-        }
-    };
 
     @Override
     public void onPause() {
@@ -192,36 +199,55 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
 
                 while (running) {
 
-//                    if (framesBuffer.size() > 0 || bandsBuffer.size() > 0 || platesBuffer.size() > 0)
-//                        Log.i(TAG, "Frames: " + framesBuffer.size() + "\tBands: " + bandsBuffer.size() +
-//                                "\tPlates: " + platesBuffer.size());
-
+                    // If not using the camera
                     if (!useCamera) {
+
+                        // Grab a frame from the video
                         if (bandQueue.remainingCapacity() > 0) {
                             final Bitmap bmFrame = mediaMetadataRetriever.getFrameAtTime(videoView.getCurrentPosition() * 1000); //unit in microsecond
                             Mat frameMat = new Mat();
                             Utils.bitmapToMat(bmFrame, frameMat);
                             framesBuffer.add(frameMat);
-//                            Log.i(TAG, "Added frame to buffer.");
+
                         }
                     }
 
                     if (platesBuffer.size() > 0) {
 
                         final Plate plate = platesBuffer.remove(0);
-//                        ArrayList<Mat> letters = plate.getLetters();
 
                         Mat plateImage = plate.getPlateImage();
 
+                        // If there is a plate image
                         if (plateImage != null && plateImage.size().area() > 0) {
-//                            String recognizedText = "";
                             baseApi.setImage(Utilities.convertMatToBmp(plateImage));
                             String recognizedText = baseApi.getUTF8Text();
                             recognizedText = recognizedText.replaceAll("[^a-zA-Z0-9\\-]+", "");
-//
-                            if (recognizedText.length() != 0)
+
+                            // If text was recognized
+                            if (recognizedText.length() != 0) {
                                 plate.setInformation(recognizedText);
 
+                                // If the recognized text is in the plates info array
+                                if (platesInformation.indexOf(recognizedText) > -1) {
+                                    plate.setFound(true);
+
+                                    Socket socket = null;
+                                    try {
+                                        socket = new Socket("valorcur.se", 567);
+
+                                        OutputStream out = socket.getOutputStream();
+                                        PrintWriter output = new PrintWriter(out);
+                                        output.println("Found plate: " + recognizedText);
+                                        output.flush();
+                                        output.close();
+
+                                        socket.close();
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }
                             // Add plate to gridview
                             MainActivity.this.runOnUiThread(new Runnable() {
                                 @Override
@@ -230,19 +256,18 @@ public class MainActivity extends Activity implements CameraBridgeViewBase.CvCam
                                         adapter.clear();
                                     }
 
-//                                    Log.i(TAG, "Adding plate.");
                                     adapter.add(plate);
                                 }
                             });
                         }
                     }
 
-
+                    // If there are new frames available
                     if (framesBuffer.size() > 0) {
-                        final Mat frame = framesBuffer.remove(0);
-                        bandThreadsExecutor.execute(new FindBands(frame, bandsBuffer, averageBand, clippingConstant));
+                        bandThreadsExecutor.execute(new FindBands(framesBuffer.remove(0), bandsBuffer, averageBand, clippingConstant));
                     }
 
+                    // If there are new bands available
                     if (bandsBuffer.size() > 0) {
                         plateThreadsExecutor.execute(new FindPlates(bandsBuffer.remove(0), platesBuffer, averageBand));
                     }

@@ -70,6 +70,10 @@ To improve the angle at which the application is able to retrieve the characters
         \label{fig:unslanting-plate}
 \end{figure}
 
+\paragraaf{Overlapping plates}
+
+To solve the problem of localising multiple plates when these plates overlap vertically instead of only looking for the largest group of peaks, the application could look for group of peaks which have a height-to-width ratio equal to that of a license plate. 
+
 \paragraaf{Text recognition}
 
 One way to solve the problem of similar shape characters being wrongly recognised is to create a dictionary where similar characters are grouped together. Every time one of these characters is recognised, the other characters in the group can be given as a possible alternative and a confidence percentage can be calculated according to which characters are present in the text.
